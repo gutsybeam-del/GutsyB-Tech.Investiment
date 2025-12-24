@@ -1,206 +1,186 @@
 <!DOCTYPE html>
-async function portalLogin() {
-    const schoolCode = document.getElementById('schoolInput').value; // e.g. COMS-001
-    const matricNo = document.getElementById('matricInput').value;   // e.g. 2025/104
-
-    // 1. Search the database for this specific student
-    const studentRef = db.collection("schools").doc(schoolCode)
-                         .collection("students").doc(matricNo);
-    
-    const doc = await studentRef.get();
-
-    if (doc.exists) {
-        const studentData = doc.data();
-        
-        // 2. Fill the portal with THEIR data
-        document.getElementById('std-name').innerText = studentData.name;
-        document.getElementById('math-result').innerText = studentData.math;
-        document.getElementById('fee-text').innerText = "₦" + studentData.fee_balance;
-        
-        // 3. Switch screen
-        showScreen('student-dash');
-    } else {
-        alert("Error: School Code or Matric Number not found!");
-    }
-}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GREAT ACHIEVER INTERNATIONAL | Nigeria</title>
+    <title>Portal | Great Achiever International College</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
+    
     <style>
-        :root { --blue: #1e3a8a; --gold: #f59e0b; --light: #f3f4f6; }
-<script src="https://checkout.flutterwave.com/v3.js"></script>
-
-<script>
-  function makePayment() {
-    FlutterwaveCheckout({
-      public_key: "FLWPUBK_TEST-YOUR-PUBLIC-KEY-HERE", // Get this from your Flutterwave Dashboard
-      tx_ref: "TXN-" + Date.now(), // Unique reference for every transaction
-      amount: 2500, // Amount in Naira
-      currency: "NGN",
-      payment_options: "card, banktransfer, ussd",
-      customer: {
-        email: "user@example.com",
-        phone_number: "08100000000",
-        name: "Customer Name",
-      },
-      callback: function (data) {
-        console.log("Payment callback data:", data);
-        if (data.status === "successful") {
-            alert("Payment Successful! Reference: " + data.transaction_id);
-            // Redirect user or update database here
-        } else {
-            alert("Payment failed!");
-        }
-      },
-      onclose: function() {
-        alert("You closed the payment window.");
-      },
-      customizations: {
-        title: "My Business Name",
-        description: "Payment for Service/Product",
-			<button type="button" onclick="makePayment()" style="background-color: #f5a623; color: #fff; padding: 15px 30px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
-    Pay Now with Flutterwave
-</button>
-        logo: "https://your-logo-url.com/logo.png",
-      },
-    });
-  }
-</script>
-		body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #333; }
+        :root { --maroon: #800000; --gold: #daa520; --navy: #000080; --light: #f4f4f4; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); margin: 0; }
         
-        /* Header */
-        header { background: var(--blue); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .nav-tabs { display: flex; background: white; justify-content: space-around; padding: 10px; border-bottom: 2px solid var(--gold); }
-        .tab { cursor: pointer; font-weight: bold; color: var(--blue); padding: 10px; }
+        /* Header & Branding */
+        header { background: var(--maroon); color: white; padding: 20px; text-align: center; border-bottom: 5px solid var(--gold); }
+        .logo-text { font-size: 28px; font-weight: bold; letter-spacing: 2px; }
+        
+        /* Navigation */
+        nav { background: var(--navy); padding: 10px; display: flex; justify-content: center; gap: 20px; }
+        nav a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; }
 
-        /* Portal Containers */
-        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        /* Portal Logic Styles */
+        .container { max-width: 1000px; margin: 30px auto; padding: 20px; }
+        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; border-top: 4px solid var(--maroon); }
         .screen { display: none; }
         .active { display: block; }
 
-        /* Tables & UI */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background: #f8fafc; }
-        .btn { background: var(--blue); color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
-        .btn:hover { background: #1e40af; }
-        .btn-pay { background: #059669; }
+        /* UI Elements */
+        .btn { padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; }
+        .btn-pay { background: var(--gold); color: black; }
+        .btn-login { background: var(--navy); color: white; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
         
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .paid { background: #dcfce7; color: #166534; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: var(--maroon); color: white; }
+        .status-paid { color: green; font-weight: bold; }
+        .status-debt { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>GREAT ACHIEVER INTERNATIONAL</h1>
-    <p>Student Management & Result Portal</p>
+    <div class="logo-text">GREAT ACHIEVER INTERNATIONAL COLLEGE</div>
+    <p>Knowledge, Excellence, and Integrity</p>
 </header>
 
-<div class="nav-tabs">
-    <div class="tab" onclick="showScreen('login-screen')">Logout</div>
-    <div class="tab" onclick="showScreen('student-dash')">Student Dashboard</div>
-    <div class="tab" onclick="showScreen('admin-dash')">Admin Office</div>
-</div>
+<nav>
+    <a onclick="showScreen('login-screen')">Login</a>
+    <a onclick="showScreen('result-screen')">Check Result</a>
+    <a onclick="showScreen('fees-screen')">Pay Fees</a>
+</nav>
 
 <div class="container">
 
     <div id="login-screen" class="screen active card">
-        <h2>Portal Login</h2>
-        <input type="text" id="regNo" placeholder="Registration Number (e.g. 2024/001)">
-        <input type="password" placeholder="Password">
-        <button class="btn" onclick="showScreen('student-dash')">Login as Student</button>
-        <p style="text-align:center; margin-top:15px; font-size:14px; color:blue; cursor:pointer;" onclick="showScreen('admin-dash')">Staff Login Area</p>
+        <h2 style="color: var(--maroon);">Student Portal Login</h2>
+        <p>Enter your Matric/Admission Number to access your dashboard.</p>
+        <input type="text" id="matric-no" placeholder="Matric Number (e.g. GAIC/2025/001)">
+        <select id="student-level">
+            <option value="JSS">Junior Secondary (JSS 1-3)</option>
+            <option value="SSS_SCIENCE">Senior Secondary (Science)</option>
+            <option value="SSS_ART">Senior Secondary (Art & Commerce)</option>
+        </select>
+        <button class="btn btn-login" onclick="loginPortal()">Access Portal</button>
     </div>
 
-    <div id="student-dash" class="screen">
+    <div id="dash-screen" class="screen">
         <div class="card">
-            <h3>Welcome, <span id="std-name">Adebayo Samuel</span></h3>
-            <p>Class: SS3 Gold | Term: First Term</p>
+            <h2>Welcome, <span id="display-name">Student</span></h2>
+            <p>Class: <span id="display-class">...</span></p>
         </div>
 
-        <div class="card">
-            <h3>💳 School Fees Status</h3>
-            <p>Outstanding Balance: <strong style="color:red">₦45,000</strong></p>
-            <button class="btn btn-pay" onclick="payFees()">Pay Online Now (Flutterwave)</button>
-        </div>
-
-        <div class="card">
-            <h3>📊 Academic Result</h3>
+        <div id="result-screen" class="card">
+            <h3>📊 Academic Statement (Termly Result)</h3>
             <table>
-                <tr><th>Subject</th><th>CA (40)</th><th>Exam (60)</th><th>Total</th></tr>
-                <tr><td>Mathematics</td><td>35</td><td>52</td><td>87 (A)</td></tr>
-                <tr><td>English</td><td>30</td><td>45</td><td>75 (B)</td></tr>
-                <tr><td>Physics</td><td>28</td><td>40</td><td>68 (B)</td></tr>
+                <thead>
+                    <tr><th>Subject</th><th>Test (40)</th><th>Exam (60)</th><th>Total</th><th>Grade</th></tr>
+                </thead>
+                <tbody id="result-body">
+                    <tr><td>Mathematics</td><td>32</td><td>55</td><td>87</td><td>A1</td></tr>
+                    <tr><td>English</td><td>28</td><td>42</td><td>70</td><td>B2</td></tr>
+                </tbody>
             </table>
-            <button class="btn" style="margin-top:15px; background:#64748b;" onclick="window.print()">Print Result</button>
-        </div>
-    </div>
-
-    <div id="admin-dash" class="screen">
-        <h2>Admin Command Center</h2>
-        
-        <div class="card">
-            <h3>Upload Student Result</h3>
-            <input type="text" placeholder="Student Reg No">
-            <select>
-                <option>Mathematics</option>
-                <option>English Language</option>
-                <option>Biology</option>
-            </select>
-            <input type="number" placeholder="CA Score">
-            <input type="number" placeholder="Exam Score">
-            <button class="btn">Upload Record</button>
         </div>
 
-        <div class="card">
-            <h3>Manage Payments</h3>
-            <table>
-                <tr><th>Student</th><th>Amount</th><th>Status</th></tr>
-                <tr><td>John Okafor</td><td>₦55,000</td><td><span class="badge paid">PAID</span></td></tr>
-                <tr><td>Musa Ibrahim</td><td>₦45,000</td><td><span style="color:red">PENDING</span></td></tr>
-            </table>
+        <div id="fees-screen" class="card">
+            <h3>💳 School Fees Payment</h3>
+            <div style="font-size: 18px; margin-bottom: 10px;">
+                Required Fee: <span id="fee-amount" style="font-weight:bold;">₦0.00</span><br>
+                Status: <span id="fee-status" class="status-debt">UNPAID</span>
+            </div>
+            <button class="btn btn-pay" onclick="processPayment()">Pay Outstanding Balance</button>
         </div>
     </div>
 
 </div>
 
 <script>
+    // --- BACKEND CONFIGURATION ---
+    // Initialize Firebase (Paste your real keys here to make it save data)
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "great-achiever-portal.firebaseapp.com",
+        projectId: "great-achiever-portal",
+        appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // Portal Logic
+    let currentUser = {
+        matric: "",
+        level: "",
+        fee: 0
+    };
+
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
+        // If they click "Check Result" or "Fees" before logging in, send them back
+        if(id !== 'login-screen' && currentUser.matric === "") {
+            alert("Please login first!");
+            showScreen('login-screen');
+        }
     }
 
-    function payFees() {
+    function loginPortal() {
+        const matric = document.getElementById('matric-no').value;
+        const level = document.getElementById('student-level').value;
+
+        if(!matric) return alert("Enter your Matric Number");
+
+        currentUser.matric = matric;
+        currentUser.level = level;
+
+        // Set Fees based on your requirements
+        if(level === "JSS") currentUser.fee = 50000;
+        else if(level === "SSS_SCIENCE") currentUser.fee = 80000;
+        else if(level === "SSS_ART") currentUser.fee = 70000;
+
+        // Update UI
+        document.getElementById('display-name').innerText = matric;
+        document.getElementById('display-class').innerText = level.replace("_", " ");
+        document.getElementById('fee-amount').innerText = "₦" + currentUser.fee.toLocaleString();
+        
+        showScreen('dash-screen');
+    }
+
+    // --- PAYMENT BACKEND (FLUTTERWAVE) ---
+    function processPayment() {
         FlutterwaveCheckout({
-            public_key: "FLWPUBK_TEST-YOUR-KEY-HERE", // Change to your key
-            tx_ref: "SCH-" + Date.now(),
-            amount: 45000,
+            public_key: "FLWPUBK_TEST-YOUR-KEY-HERE", // Change to Live Key later
+            tx_ref: "GAIC-" + currentUser.matric + "-" + Date.now(),
+            amount: currentUser.fee,
             currency: "NGN",
             payment_options: "card, banktransfer, ussd",
             customer: {
-                email: "student@school.com",
-                name: "Adebayo Samuel",
+                email: "student@greatachiever.com",
+                name: currentUser.matric,
             },
             callback: function (data) {
                 if (data.status === "successful") {
-                    alert("Fees Payment Successful! Your portal has been updated.");
+                    document.getElementById('fee-status').innerText = "PAID";
+                    document.getElementById('fee-status').className = "status-paid";
+                    alert("Payment Verified! Thank you.");
+                    
+                    // Save to Backend (Firebase)
+                    db.collection("payments").doc(currentUser.matric).set({
+                        amount: currentUser.fee,
+                        status: "Paid",
+                        date: new Date()
+                    });
                 }
             },
             customizations: {
-                title: "SmartSchool Fees",
-                description: "First Term Tuition Payment",
+                title: "Great Achiever College",
+                description: "School Fees Payment for " + currentUser.level,
+                logo: "https://via.placeholder.com/150",
             },
         });
     }
 </script>
-
 </body>
 </html>
-
