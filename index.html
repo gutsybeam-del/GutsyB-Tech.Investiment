@@ -3,123 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAIC Standard Portal | Multi-Device</title>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-    <script src="https://checkout.flutterwave.com/v3.js"></script>
-    
+    <title>Great Achiever International College | Remita Payment Portal</title>
+    <script src="https://remitademo.net/payment/v1/remita-pay-inline.bundle.js"></script>
     <style>
         :root { --primary: #800000; --navy: #001f3f; --gold: #daa520; --light: #f4f7f6; }
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--light); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
         header { background: var(--primary); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--gold); }
         .main-container { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 260px; background: var(--navy); color: white; display: none; flex-direction: column; padding-top: 20px; }
+        
+        .sidebar { width: 280px; background: var(--navy); color: white; display: none; flex-direction: column; padding-top: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
         .sidebar a { padding: 15px 25px; color: #cbd5e1; text-decoration: none; display: block; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .sidebar a:hover { background: rgba(255,255,255,0.1); color: var(--gold); }
+
         .content { flex: 1; padding: 25px; overflow-y: auto; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
         .screen { display: none; }
         .active-screen { display: block; animation: fadeIn 0.3s ease; }
-        .profile-img { width: 110px; height: 110px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; display: block; margin: 10px auto; }
+
+        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; display: block; margin: 10px auto; background: #eee; }
         input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        
         .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
         .btn-main { background: var(--primary); color: white; }
-        .subject-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .subject-item { background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #eee; display: flex; align-items: center; gap: 10px; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .btn-remita { background: #ff5722; color: white; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="font-weight: 900;">GAIC CLOUD PORTAL</div>
-    <div id="user-tag" style="font-size: 12px;">Cloud Sync Active</div>
+    <div style="font-weight: 900; letter-spacing: 1px; font-size: 18px;">GREAT ACHIEVER INTERNATIONAL COLLEGE</div>
+    <div id="status-tag" style="font-size: 11px;">REMITA SECURE</div>
 </header>
 
 <div class="main-container">
     <div class="sidebar" id="sidebar">
-        <a onclick="showScreen('s-home')">🏠 Home Dashboard</a>
+        <a onclick="showScreen('s-home')">🏠 Dashboard Home</a>
         <a onclick="showScreen('s-reg')">📝 Course Registration</a>
-        <a onclick="showScreen('s-results')">📊 Academic Results</a>
-        <a onclick="showScreen('s-settings')">⚙️ Account Settings</a>
-        <a onclick="location.reload()" style="color:#ff6b6b;">🚪 Logout</a>
+        <a onclick="showScreen('s-fees')">💳 Pay School Fees</a>
+        <a onclick="showScreen('s-results')">📊 Exam Results</a>
+        <a onclick="showScreen('s-settings')">⚙️ Profile Settings</a>
+        <a onclick="location.reload()" style="color:#ff6b6b;">Logout</a>
     </div>
 
     <div class="content">
-        <div id="login-screen" class="screen active-screen card" style="max-width: 400px; margin: auto;">
-            <h2 style="text-align:center;">Student Login</h2>
-            <input type="text" id="l-id" placeholder="Admission ID">
+        <div id="login-screen" class="screen active-screen card" style="max-width: 420px; margin: 40px auto;">
+            <h2 style="text-align:center; color:var(--primary);">Student Login</h2>
+            <input type="text" id="l-id" placeholder="Admission Number">
             <input type="password" id="l-pass" placeholder="Password">
-            <button class="btn btn-main" onclick="doLogin()">Sign In</button>
-            <p onclick="adminGate()" style="text-align:center; cursor:pointer; font-size:11px; margin-top:15px; color:gray;">Admin Office</p>
+            <button class="btn btn-main" onclick="doLogin()">Access Portal</button>
+            <p onclick="adminGate()" style="text-align:center; cursor:pointer; font-size:11px; margin-top:20px; color:gray;">Staff Admin Entry</p>
         </div>
 
         <div id="admin-screen" class="screen card">
-            <button onclick="location.reload()">⬅ Back to Login</button>
-            <h2>Enroll New Student</h2>
-            <input type="text" id="r-name" placeholder="Full Student Name">
-            <input type="text" id="r-id" placeholder="Admission ID (e.g. 2025/001)">
+            <button class="btn" style="width:auto; background:#666; color:white;" onclick="showScreen('login-screen')">⬅ Back</button>
+            <h2>Admin Office</h2>
+            <input type="text" id="r-name" placeholder="Full Name">
+            <input type="text" id="r-id" placeholder="Admission Number">
             <select id="r-dept">
-                <option value="JSS">Junior Secondary (JSS 1-3)</option>
-                <option value="Science">Senior Science (SS 1-3)</option>
-                <option value="Art">Senior Art (SS 1-3)</option>
-                <option value="Commerce">Senior Commerce (SS 1-3)</option>
+                <option value="JSS">JSS (₦55,000)</option>
+                <option value="Science">Science (₦85,000)</option>
+                <option value="Art">Art (₦75,000)</option>
+                <option value="Commerce">Commerce (₦75,000)</option>
             </select>
-            <button class="btn btn-main" onclick="enroll()">Save Student to Database</button>
+            <button class="btn btn-main" onclick="enroll()">Register Student</button>
+        </div>
+
+        <div id="s-fees" class="screen card">
+            <h2>School Fees Payment</h2>
+            <div style="background:#f0f7ff; padding:20px; border-radius:10px; border:1px solid #007bff;">
+                <p>Outstanding Balance: <strong id="f-amt">₦0.00</strong></p>
+                <p>Status: <span id="f-stat" style="font-weight:bold;">PENDING</span></p>
+            </div>
+            <br>
+            <p style="font-size:13px; color:#555;">Click the button below to generate your Remita RRR and pay online or at any bank branch.</p>
+            <button class="btn btn-remita" id="remita-btn" onclick="makeRemitaPayment()">
+                <img src="https://www.remita.net/assets/img/remita-logo.png" alt="Remita" height="20"> 
+                Pay with Remita
+            </button>
         </div>
 
         <div id="s-home" class="screen card" style="text-align:center;">
             <img src="" id="h-img" class="profile-img">
-            <h2 id="h-name">...</h2>
-            <p id="h-dept" style="color:var(--gold); font-weight:bold;">...</p>
-            <div style="background:#e8f5e9; padding:15px; border-radius:10px; border:1px solid #2e7d32; margin-top:20px;">
-                <p>Welcome! Please complete your <b>Course Registration</b> for the 2025 Session.</p>
-                <button class="btn btn-main" style="background:#2e7d32;" onclick="showScreen('s-reg')">Start Registration</button>
+            <h2 id="h-name">Student Name</h2>
+            <p id="h-dept" style="color:var(--gold); font-weight:bold;">DEPARTMENT</p>
+            <div style="background:#e8f5e9; padding:20px; border-radius:12px; margin-top:20px;">
+                <h4>Welcome to Great Achiever</h4>
+                <p>Pay your fees to unlock your examination results.</p>
             </div>
         </div>
 
         <div id="s-reg" class="screen card">
-            <h2>Course Registration Form</h2>
-            <p>Select the subjects you are offering this term:</p>
-            <div id="subject-list" class="subject-grid">
-                </div>
-            <button class="btn btn-main" onclick="saveCourses()" style="margin-top:30px;">Submit Registered Subjects</button>
+            <h2>Course Registration</h2>
+            <div id="subject-list" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+            <button class="btn btn-main" onclick="saveCourses()">Save Registration</button>
         </div>
 
         <div id="s-results" class="screen card">
-            <h2>Termly Result Sheet</h2>
-            <div id="res-display">
-                <p style="color:red;">No subjects registered yet.</p>
-            </div>
+            <h2>Examination Results</h2>
+            <div id="res-display">Please pay fees to view results.</div>
         </div>
 
         <div id="s-settings" class="screen card">
-            <h3>Update Profile</h3>
+            <h3>Account Settings</h3>
             <input type="file" id="file-input" accept="image/*" onchange="previewImg()">
-            <button class="btn btn-main" onclick="savePhoto()">Upload Passport</button>
+            <button class="btn btn-main" onclick="savePhoto()">Update Passport</button>
             <hr>
-            <h3>Update Password</h3>
-            <input type="password" id="new-p" placeholder="Enter New Password">
-            <button class="btn btn-main" style="background:var(--navy)" onclick="savePass()">Save New Password</button>
+            <input type="password" id="new-p" placeholder="Change Password">
+            <button class="btn btn-main" onclick="savePass()">Update Password</button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- FIREBASE CONFIGURATION ---
-    const firebaseConfig = { apiKey: "YOUR_API_KEY", databaseURL: "YOUR_DB_URL" }; 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
+    let db = JSON.parse(localStorage.getItem('GREAT_ACHIEVER_DB')) || [];
     let user = null;
     let tempImg = "";
 
-    // --- OFFICIAL NIGERIAN SUBJECT DATA ---
+    const feeSchedule = { "JSS": 55000, "Science": 85000, "Art": 75000, "Commerce": 75000 };
     const officialSubjects = {
-        "JSS": ["Mathematics", "English Studies", "Basic Science", "Social Studies", "Basic Technology", "Civic Education", "Agricultural Science", "Physical & Health Education", "Home Economics", "Computer Studies/ICT", "Cultural & Creative Arts", "French"],
-        "Science": ["English Language", "General Mathematics", "Physics", "Chemistry", "Biology", "Further Mathematics", "Geography", "Agricultural Science", "Economics", "Civic Education", "Data Processing", "Animal Husbandry"],
-        "Art": ["English Language", "General Mathematics", "Literature-in-English", "Government", "History", "CRS / IRS", "Economics", "Civic Education", "Dyeing & Bleaching", "Visual Arts", "Nigerian Language"],
-        "Commerce": ["English Language", "General Mathematics", "Financial Accounting", "Commerce", "Economics", "Insurance", "Marketing", "Office Practice", "Civic Education", "Data Processing", "Book Keeping"]
+        "JSS": ["Mathematics", "English Studies", "Basic Science", "Social Studies", "Basic Tech"],
+        "Science": ["Physics", "Chemistry", "Biology", "Further Maths", "General Maths", "English"],
+        "Art": ["Government", "Literature", "History", "CRS/IRS", "General Maths", "English"],
+        "Commerce": ["Accounts", "Commerce", "Economics", "Marketing", "General Maths", "English"]
     };
 
     function showScreen(id) {
@@ -130,93 +141,77 @@
     }
 
     function doLogin() {
-        const id = document.getElementById('l-id').value.replace(/\//g, '-');
+        const id = document.getElementById('l-id').value;
         const pass = document.getElementById('l-pass').value;
-        db.ref('students/' + id).once('value').then(snap => {
-            const data = snap.val();
-            if(data && data.pass === pass) {
-                user = data;
-                document.getElementById('sidebar').style.display = 'flex';
+        user = db.find(x => x.id === id && x.pass === pass);
+        if(user) {
+            document.getElementById('sidebar').style.display = 'flex';
+            refreshHome();
+            showScreen('s-home');
+        } else { alert("Login Error"); }
+    }
+
+    function refreshHome() {
+        document.getElementById('h-name').innerText = user.name;
+        document.getElementById('h-dept').innerText = user.dept.toUpperCase();
+        document.getElementById('h-img').src = user.img || "https://via.placeholder.com/120";
+        document.getElementById('f-amt').innerText = "₦" + feeSchedule[user.dept].toLocaleString();
+        document.getElementById('f-stat').innerText = user.paid ? "PAID ✅" : "UNPAID ❌";
+        document.getElementById('remita-btn').style.display = user.paid ? 'none' : 'flex';
+    }
+
+    function makeRemitaPayment() {
+        // This is a Demo Integration. For Live, you need a Merchant ID and Service Type ID.
+        var paymentEngine = RmPaymentEngine.init({
+            key: "REVXU0VSfDQwMjc1fGYzY2M0Y2VlYTNkM2IyZTM5YTZlMGRhNmU3YmU5YWVl", // Demo Key
+            processRrr: true,
+            transactionId: "GAIC-" + Math.floor(Math.random() * 1101233),
+            firstName: user.name,
+            lastName: "Student",
+            email: user.id + "@school.com",
+            amount: feeSchedule[user.dept],
+            customerId: user.id,
+            description: "School Fees Payment for Great Achiever International College",
+            onSuccess: function (response) {
+                user.paid = true;
+                localStorage.setItem('GREAT_ACHIEVER_DB', JSON.stringify(db));
                 refreshHome();
-                showScreen('s-home');
-            } else { alert("Invalid Credentials"); }
+                alert("Payment Successful! RRR: " + response.rrr);
+            },
+            onError: function (response) {
+                alert("Payment Failed: " + response.message);
+            }
         });
+        paymentEngine.showPaymentWidget();
+    }
+
+    function enroll() {
+        const name = document.getElementById('r-name').value;
+        const id = document.getElementById('r-id').value;
+        const dept = document.getElementById('r-dept').value;
+        db.push({ name, id, dept, pass: "1234", img: "", paid: false, registered: [] });
+        localStorage.setItem('GREAT_ACHIEVER_DB', JSON.stringify(db));
+        alert("Student Registered!");
     }
 
     function loadSubjects() {
         const box = document.getElementById('subject-list');
         box.innerHTML = "";
-        const deptList = officialSubjects[user.dept] || [];
-        deptList.forEach(sub => {
-            box.innerHTML += `
-                <div class="subject-item">
-                    <input type="checkbox" value="${sub}" class="sub-check">
-                    <label>${sub}</label>
-                </div>`;
+        officialSubjects[user.dept].forEach(sub => {
+            box.innerHTML += `<div><input type="checkbox" value="${sub}"> <label>${sub}</label></div>`;
         });
-    }
-
-    function saveCourses() {
-        let selected = [];
-        document.querySelectorAll('.sub-check:checked').forEach(el => selected.push(el.value));
-        if(selected.length < 5) return alert("Please select at least 5 subjects.");
-        
-        db.ref('students/' + user.id.replace(/\//g, '-') + '/registered').set(selected);
-        alert("Registration Successful!");
-        showScreen('s-results');
     }
 
     function loadResults() {
         const box = document.getElementById('res-display');
-        db.ref('students/' + user.id.replace(/\//g, '-') + '/registered').once('value').then(snap => {
-            const reg = snap.val();
-            if(!reg) return;
-            let table = `<table width="100%" border="1" style="border-collapse:collapse; text-align:left;">
-                <tr style="background:#eee;"><th>Subject</th><th>CA Score</th><th>Exam Score</th><th>Total</th></tr>`;
-            reg.forEach(s => {
-                table += `<tr><td>${s}</td><td>-</td><td>-</td><td>-</td></tr>`;
-            });
-            table += `</table>`;
-            box.innerHTML = table;
-        });
+        if(!user.paid) {
+            box.innerHTML = "<h3 style='color:red;'>Access Denied: Please pay your fees via Remita to unlock results.</h3>";
+        } else {
+            box.innerHTML = "<h3>Results Unlocked. Scores will be uploaded by Staff soon.</h3>";
+        }
     }
 
-    function enroll() {
-        const id = document.getElementById('r-id').value;
-        const name = document.getElementById('r-name').value;
-        const dept = document.getElementById('r-dept').value;
-        const cleanID = id.replace(/\//g, '-');
-        db.ref('students/' + cleanID).set({
-            name, id, dept, pass: "1234", img: ""
-        });
-        alert("Student Synced to Cloud!");
-    }
-
-    function refreshHome() {
-        document.getElementById('h-name').innerText = user.name;
-        document.getElementById('h-dept').innerText = user.dept + " Department";
-        document.getElementById('h-img').src = user.img || "https://via.placeholder.com/110";
-    }
-
-    function previewImg() {
-        const file = document.getElementById('file-input').files[0];
-        const reader = new FileReader();
-        reader.onloadend = () => tempImg = reader.result;
-        if(file) reader.readAsDataURL(file);
-    }
-
-    function savePhoto() {
-        db.ref('students/' + user.id.replace(/\//g, '-')).update({ img: tempImg });
-        alert("Photo Saved!");
-    }
-
-    function savePass() {
-        const p = document.getElementById('new-p').value;
-        db.ref('students/' + user.id.replace(/\//g, '-')).update({ pass: p });
-        alert("Password Updated!");
-    }
-
-    function adminGate() { if(prompt("Key:") === "777") showScreen('admin-screen'); }
+    function adminGate() { if(prompt("Admin Key:") === "777") showScreen('admin-screen'); }
 </script>
 </body>
 </html>
