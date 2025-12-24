@@ -1,181 +1,639 @@
+
+
+
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Great Achiever | Nigeria</title>
-    <script src="https://checkout.flutterwave.com/v3.js"></script>
-    <style>
-        :root { --blue: #1e3a8a; --gold: #f59e0b; --light: #f3f4f6; }
-<script src="https://checkout.flutterwave.com/v3.js"></script>
-<button type="button" onclick="makePayment()" style="background-color: #f5a623; color: #fff; padding: 15px 30px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
-    Pay Now with Flutterwave
-</button>
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+<head><title>
+	National Youth Service Corps.
+</title><meta charset="utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" /><meta name="description" /><meta name="viewport" content="width=device-width" /><link rel="stylesheet" href="css/bootstrap.min.css" /><link rel="stylesheet" href="css/icomoon-social.css" /><link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700,600,800" rel="stylesheet" type="text/css" /><link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+
+  
+     
+   <script src="js/jquery-1.9.1.min.js"></script>
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <script src="JScript/jquery-ui.js"></script>
+    <link href="JScript/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-122604440-1"></script>
 <script>
-  function makePayment() {
-    FlutterwaveCheckout({
-      public_key: "FLWPUBK_TEST-YOUR-PUBLIC-KEY-HERE", // Get this from your Flutterwave Dashboard
-      tx_ref: "TXN-" + Date.now(), // Unique reference for every transaction
-      amount: 2500, // Amount in Naira
-      currency: "NGN",
-      payment_options: "card, banktransfer, ussd",
-      customer: {
-        email: "user@example.com",
-        phone_number: "08100000000",
-        name: "Customer Name",
-      },
-      callback: function (data) {
-        console.log("Payment callback data:", data);
-        if (data.status === "successful") {
-            alert("Payment Successful! Reference: " + data.transaction_id);
-            // Redirect user or update database here
-        } else {
-            alert("Payment failed!");
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-122604440-1');
+</script>
+
+
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <!--[if lte IE 8]>
+		    <link rel="stylesheet" href="css/leaflet.ie.css" />
+		<![endif]-->
+    <link rel="stylesheet" href="css/main.css" /><link href="css/NyscCss.css" rel="stylesheet" />
+
+    <script src="js/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- Resource style -->
+    <link rel="shortcut icon" href="Images/favicon.ico" />
+    <!-- Modernizr -->
+    <script>
+        $(document).ready(function () {
+            $("#menuToggle").click(function () {
+                $(".nav").slideToggle(300);
+            });
+        });
+    </script>
+    <style type="text/css">
+        .auto-style1 {
+            left: 0px;
+            top: 0px;
         }
-      },
-      onclose: function() {
-        alert("You closed the payment window.");
-      },
-      customizations: {
-        title: "My Business Name",
-        description: "Payment for Service/Product",
-        logo: "https://your-logo-url.com/logo.png",
-      },
-    });
-  }
-</script>        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #333; }
+    </style>
+    <style>
+        div .section {
+            margin-top: -40px;
+            margin-bottom: -40px;
+        }
         
-        /* Header */
-        header { background: var(--blue); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .nav-tabs { display: flex; background: white; justify-content: space-around; padding: 10px; border-bottom: 2px solid var(--gold); }
-        .tab { cursor: pointer; font-weight: bold; color: var(--blue); padding: 10px; }
-
-        /* Portal Containers */
-        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .screen { display: none; }
-        .active { display: block; }
-
-        /* Tables & UI */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background: #f8fafc; }
-        .btn { background: var(--blue); color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
-        .btn:hover { background: #1e40af; }
-        .btn-pay { background: #059669; }
-        
-        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .paid { background: #dcfce7; color: #166534; }
+    fieldset{
+        padding:0px 10px;
+    }
     </style>
 </head>
 <body>
-
-<header>
-    <h1>SMARTSCHOOL INTERNATIONAL</h1>
-    <p>Student Management & Result Portal</p>
-</header>
-
-<div class="nav-tabs">
-    <div class="tab" onclick="showScreen('login-screen')">Logout</div>
-    <div class="tab" onclick="showScreen('student-dash')">Student Dashboard</div>
-    <div class="tab" onclick="showScreen('admin-dash')">Admin Office</div>
+    <form method="post" action="./lgaclearance_CM.aspx" id="aspnetForm">
+<div class="aspNetHidden">
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="bITKSy0PrH5r/xDmtHFKAv3jmiayu+2uSsBoqcU08BedZWCVCRuB1tTpjHMnEfIuuYNSF0hl6B9MXLucjgUYkVYoqqrwuvP7hXu+7IITdgSBl11S0bPlYYscbLvSEdGdo2ZIpMOEEi2oOtsUlmy1/dSX5x8qy/sG4P/J17p3rlPM8SsLUADFpb7Rytxciv3Uq7fzfEuiR3Nl0GiCf9GMG9EI4ZL0sODKDeDYqLeNYhdp2LF+sst1FlCOI0H+V/0gRbbENVWqpOgex2naRgKHtGZ6Z9bmY3uCE3z3rpY98ujNXUfREeTdIBShN812771Cm3884Z4GJI4qfjoTDe0d8SM/Dh+jIIYkdmDHuKXMEpEkSQwSa4MWl12xJzR8yRmWqnx9jbun5E8HRvcOO1FBdg81EaI0j8Ba9t0H5YwyPbRDwIpsadPTGf3fySY310LTBPATnnJ3+oM2nkUvDKSbKxoxsOelvPzireYGY+kWSrx6dz6Yb5gbvabLA6YkprijMVGkGdoGLLZ6JQl0FOXVDiw03XvrrHOEma8lOh9ILgqKujbh6NX/1dAGojq5abfW+OiQNkz4k0Buvn45VvDS6AyqaDvCaDAspGNi99Li6CIlLd7ftTBPjl4d4sCGq0LviQ2K/7EbhjQcadKKFulj7phJ5kh6U37jSi0tl7noWG/dtcDU7211ozg924VjjUvuuXB2JgXxiMnNJtiLz7M+fHbnSE4Cr6y3P1WCuBGAQnAPpzyksTP8fN0tUehfoEKg34gnlDyki0qX7iM39DjYac5vbBam8Tdk3CA1R5BSBWLqr7ECYpwyomz7pAMi0jl2vVJ6s/s+ju9B/caIr7ixvLKU6LBYgrhJkaLh55r/anmzzHTMDa1/FIn5g0X0tlEmNJSL3lgJvpM6jpEm7vJe8YbDS6Ynv2S6KX28eV7Aa7c23LsiJB0k3ck8Mm26OobYRZvAVtM+ebW1pdzu0H8Hpg/rQPBZbWGhhxGvyTG0ll9RIlCbZYrVaU0HGkJO5iR34BRXxMM1/MEYJxHfKLmPbk9BWO1PqGoG/wViOOWk6Si4bYnZ4H/upqfVyGGiSDI7TebzhXBLjbG5lNpmI/NsfjhvetpwRqFtYjDQ/R+hfZEfWfsCvyE7NoZYFneYICxNKVhNUTaUkg8PtrOgUvl7a/s2wF78cU3jc/8ThXVOwW2MJdtqYW7wdWfCveqX2PM2g2l5uqWAze+hw/suLU785p/QxU0/XaSvC3YZsnUpZTUk1HFvfpS0+dOILFF8ZBwwGwSVe33M1ZpAggHnwKDi7pYzr5Kyeodq2IYJjL/MjmXGpwxTT8Q22q4q1jXSfbx7lpNLLOGyknjzPH7SsILbdc9EMGpvMTh2AONK7sP7+LosY/5IBoyhRs1MxfMb4TN4YoKSiHTcxrZxv/9Y8iAC3ZbykI9c52LukgoY8gcqEjRQzfr2sGOoZ1Lwp9ZvJKO635eJOdRu03pmk1dyG9cPrUg76g4JXA+LIyHyTGq2fEuZgcdlg6wNORRQbXGIv73kycvXJb7suJomM5mht0d8zXSng56+94RCau9XGIKL3TpGwnvyW7NhCqWBILhRMNKfOLCxPl/2hl4ncua8Mc+5MJkgVUtkHC9b4Q+DOOvE+M8=" />
 </div>
 
-<div class="container">
-
-    <div id="login-screen" class="screen active card">
-        <h2>Portal Login</h2>
-        <input type="text" id="regNo" placeholder="Registration Number (e.g. 2024/001)">
-        <input type="password" placeholder="Password">
-        <button class="btn" onclick="showScreen('student-dash')">Login as Student</button>
-        <p style="text-align:center; margin-top:15px; font-size:14px; color:blue; cursor:pointer;" onclick="showScreen('admin-dash')">Staff Login Area</p>
-    </div>
-
-    <div id="student-dash" class="screen">
-        <div class="card">
-            <h3>Welcome, <span id="std-name">Adebayo Samuel</span></h3>
-            <p>Class: SS3 Gold | Term: First Term</p>
-        </div>
-
-        <div class="card">
-            <h3>💳 School Fees Status</h3>
-            <p>Outstanding Balance: <strong style="color:red">₦45,000</strong></p>
-            <button class="btn btn-pay" onclick="payFees()">Pay Online Now (Flutterwave)</button>
-        </div>
-
-        <div class="card">
-            <h3>📊 Academic Result</h3>
-            <table>
-                <tr><th>Subject</th><th>CA (40)</th><th>Exam (60)</th><th>Total</th></tr>
-                <tr><td>Mathematics</td><td>35</td><td>52</td><td>87 (A)</td></tr>
-                <tr><td>English</td><td>30</td><td>45</td><td>75 (B)</td></tr>
-                <tr><td>Physics</td><td>28</td><td>40</td><td>68 (B)</td></tr>
-            </table>
-            <button class="btn" style="margin-top:15px; background:#64748b;" onclick="window.print()">Print Result</button>
-        </div>
-    </div>
-
-    <div id="admin-dash" class="screen">
-        <h2>Admin Command Center</h2>
-        
-        <div class="card">
-            <h3>Upload Student Result</h3>
-            <input type="text" placeholder="Student Reg No">
-            <select>
-                <option>Mathematics</option>
-                <option>English Language</option>
-                <option>Biology</option>
-            </select>
-            <input type="number" placeholder="CA Score">
-            <input type="number" placeholder="Exam Score">
-            <button class="btn">Upload Record</button>
-        </div>
-
-        <div class="card">
-            <h3>Manage Payments</h3>
-            <table>
-                <tr><th>Student</th><th>Amount</th><th>Status</th></tr>
-                <tr><td>John Okafor</td><td>₦55,000</td><td><span class="badge paid">PAID</span></td></tr>
-                <tr><td>Musa Ibrahim</td><td>₦45,000</td><td><span style="color:red">PENDING</span></td></tr>
-            </table>
-        </div>
-    </div>
-
-</div>
-
-<script>
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
     }
-
-    function payFees() {
-        FlutterwaveCheckout({
-            public_key: "FLWPUBK_TEST-YOUR-KEY-HERE", // Change to your key
-            tx_ref: "SCH-" + Date.now(),
-            amount: 45000,
-            currency: "NGN",
-            payment_options: "card, banktransfer, ussd",
-            customer: {
-                email: "student@school.com",
-                name: "Adebayo Samuel",
-            },
-            callback: function (data) {
-                if (data.status === "successful") {
-                    alert("Fees Payment Successful! Your portal has been updated.");
-                }
-            },
-            customizations: {
-                title: "SmartSchool Fees",
-                description: "First Term Tuition Payment",
-            },
-        });
-    }
+}
+//]]>
 </script>
+
+
+<script src="/NYSC1/WebResource.axd?d=pynGkmcFUV13He1Qd6_TZBYjxer65VAh3eh-t4l1blDtNO9iHKwvEw93VpZVeQfxDJQ4FwYmk90d7X_MxeSShg2&amp;t=638795219190260923" type="text/javascript"></script>
+
+
+<script src="/NYSC1/ScriptResource.axd?d=D9drwtSJ4hBA6O8UhT6CQqAQxEG6ruDImNu1J_wniqYnuKg5C8PjBYFxZKisn_xB2vB5_XxNHKcBFJs3FTYnq-QdvrQv_43HDtdnDYFzXQGX72iiQ-GZgV-m6g6dvYhfU61o3ha5J3ZPdpo3l8eb0n-AW5ey0odKnx2KpN_jl7s1&amp;t=4227dd99" type="text/javascript"></script>
+<script type="text/javascript">
+//<![CDATA[
+if (typeof(Sys) === 'undefined') throw new Error('ASP.NET Ajax client-side framework failed to load.');
+//]]>
+</script>
+
+<script src="/NYSC1/ScriptResource.axd?d=JnUc-DEDOM5KzzVKtsL1tY7OxjxmW5WTMeRWB38FmXJ5vLrG7kam79VP27WEaQjwZ1xQ0B55ino_oQSLXIlmpabUyfrAziNN8yQO62NvWBW80lSQXncoZXtXYFlIN_pIoIRt-KPRAPWz9uDMNLrf2sVG3dooZM9mkn6uRtpYSA98tM9M4MndIqt-3COw2Vkx0&amp;t=4227dd99" type="text/javascript"></script>
+<div class="aspNetHidden">
+
+	<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="5918669A" />
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="Na3WyueG9foJzfz1zAAYFyzEI/rsuE5uuG6ZeVtz1bFNiGikR91O95A0dIYWA4v3ZSzwHSpxyYA9Js2+AqsjUAsEV/Lx/Y501ClG3xvrncOw55+XezTYoxPgTKIi2ZyS" />
+</div>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Navigation & Logo-->
+        <div class="mainmenu-wrapper">
+
+            <div class="container">
+                <nav id="mainmenu" class="mainmenu">
+                    <ul>
+                        <li class="logo-wrapper"><a href="home" onmouseover="this.style.backgroundColor='#fff';" onmouseout="this.style.backgroundColor='#fff';" style="background-color: rgb(255, 255, 255);">
+                            <img src="img/banner1.png" alt="home" /></a></li>
+                        <li>
+                            <a href="home">Home</a>
+                        </li>
+                        
+                        
+                        <!-- /mainmenu-submenu -->
+
+                        
+                        
+                        
+                        <li>
+                            <a href="Transactionstatus_Remita">Payment Status </a>
+                            
+                        </li>
+                        <li>
+                            <a href="Contact.aspx">Contact Us</a>
+                        </li>
+
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+
+        <div class="section section-breadcrumbs" style="padding: 7px 0;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 style="font-weight: normal; font-size: 2.3em;">
+                            NYSC Registration Portal
+                            
+
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section section-white">
+            <div class="container" style="width: 100%;">
+                <div class="row">
+                    <script type="text/javascript">
+//<![CDATA[
+Sys.WebForms.PageRequestManager._initialize('ctl00$ScriptManager1', 'aspnetForm', ['tctl00$ContentPlaceHolder2$UpdatePanel1',''], [], [], 90, 'ctl00');
+//]]>
+</script>
+
+                    
+
+                    <div class="section section-white">
+                        <div class="container" style="width: 97%;">
+                            <div class="row">
+                                <!-- Sidebar -->
+                                <div class="col-sm-2 blog-sidebar" style="padding-left:5px;padding-right:4px">
+                                    <h4 style="margin-bottom: 5px;">Actions</h4>
+                                    <div class="ToggleButton" onclick="myFunction(this)" id="menuToggle">
+                                        <div class="bar1"></div>
+                                        <div class="bar2"></div>
+                                        <div class="bar3"></div>
+                                    </div>
+                                    <!-- accordion menu section -->
+                                    <div>
+                                        <link href="css/font-awesome.min.css" rel="stylesheet" />
+                                        <style>
+                                .accordion {
+                                    width: 100%;
+                                    max-width: 360px;
+                                    margin: 30px auto 20px;
+                                    background: #FFF;
+                                    -webkit-border-radius: 4px;
+                                    -moz-border-radius: 4px;
+                                    border-radius: 4px;
+                                }
+                                
+                                    .accordion .linkinner { 
+                                        display: block; 
+                                        position: relative; 
+                                        vertical-align:middle;
+                                    }
+                                    .accordion .link {
+                                        cursor: pointer;
+                                        display: block;
+                                        padding: 15px 15px 15px 42px;
+                                        color: #4D4D4D;
+                                        font-size: 14px;
+                                        font-weight: 700;
+                                        border-bottom: 1px solid #CCC;
+                                        position: relative;
+                                        -webkit-transition: all 0.4s ease;
+                                        -o-transition: all 0.4s ease;
+                                        transition: all 0.4s ease;
+                                    }
+                                     .accordion .link:hover {
+                                        padding: 15px 15px 15px 42px;
+                                        color: #b63b4d;
+                                        border-bottom: 1px solid #b63b4d;
+                                        -webkit-transition: all 0.4s ease;
+                                        -o-transition: all 0.4s ease;
+                                        transition: all 0.4s ease;
+                                    }
+                                    .accordion li:last-child .link {
+                                        border-bottom: 0;
+                                    }
+                                    .accordion li i {
+                                        position: absolute;
+                                        top: 16px;
+                                        left: 12px;
+                                        font-size: 18px;
+                                        color: #595959;
+                                        -webkit-transition: all 0.4s ease;
+                                        -o-transition: all 0.4s ease;
+                                        transition: all 0.4s ease;
+                                    }
+                                        .accordion li i.fa-chevron-down {
+                                            right: 12px;
+                                            left: auto;
+                                            font-size: 16px;
+                                        }
+                                    .accordion li.open .link {
+                                        color: #b63b4d;
+                                    }
+                                    .accordion li.open i {
+                                        color: #b63b4d;
+                                    }
+                                        .accordion li.open i.fa-chevron-down {
+                                            -webkit-transform: rotate(180deg);
+                                            -ms-transform: rotate(180deg);
+                                            -o-transform: rotate(180deg);
+                                            transform: rotate(180deg);
+                                        }
+                                /**
+                 * submenuaccord
+                 -----------------------------*/
+ 
+                                .submenuaccord {
+                                    display: none;
+                                    background: #366a3e;
+                                    font-size: 14px;
+                                }
+                                .submenuaccord li {
+                                    border-bottom: 1px solid #4b4a5e;
+                                    border-bottom-color: #478D52;
+                                }
+                                    .submenuaccord a {
+                                    display: block;
+                                    text-decoration: none;
+                                    color: #fefefe;
+                                    padding: 12px 12px 12px 32px;
+                                    -webkit-transition: all 0.25s ease;
+                                    -o-transition: all 0.25s ease;
+                                    transition: all 0.25s ease;
+                                }
+                                        .submenuaccord a:hover {
+                                    background: #780303;
+                                    color: #FFF;
+                                }
+                            </style>
+                                        <div id="ctl00_menucontainer" role="navigation" class="navcollapse">
+                                            <ul id="accordion" class="accordion">
+                                                <li><a href="corpHome.aspx" id="ctl00_ahome" style="text-decoration: none">
+                                                    <div class="link"><i class="fa fa-hand-o-right"></i>My Dashboard</div>
+                                                </a></li>
+                                                <li><a href="CorpChangePassword" id="ctl00_achangepass" style="text-decoration: none">
+                                                    <div class="link"><i class="fa fa-hand-o-right"></i>Change Password</div>
+                                                </a></li>
+                                                
+                                                <li><a href="CourseCorrection.aspx" id="ctl00_a1" style="text-decoration: none">
+                                                    <div class="link"><i class="fa fa-hand-o-right"></i>Course Correction</div>
+                                                </a></li>
+                                                 <li><a href="corpsppaletter.aspx" id="ctl00_a2" style="text-decoration: none">
+                                                    <div id="ctl00_divppaletter" class="link"><i class="fa fa-hand-o-right"></i>PPA Letter</div>
+                                                </a></li>
+                                                 <li><a href="lgaclearance_CM.aspx" id="ctl00_a3" style="text-decoration: none">
+                                                    <div id="ctl00_divmonthlyclearance" class="link"><i class="fa fa-hand-o-right"></i>LGA Clearance</div>
+                                                </a></li>
+                                                 <li><a href="CorpsDisciplinaryCase.aspx" id="ctl00_a4" style="text-decoration: none">
+                                                    <div id="ctl00_div1" class="link"><i class="fa fa-hand-o-right"></i>Disciplinary Case</div>
+                                                </a></li>
+                                              <li>
+                                                    
+                                                </li>
+                                              
+                                              <li>
+                                                    
+                                                </li>
+                                              
+                                              <li>
+                                                    <div id="ctl00_divsaed" class="link">
+                                                      <i class="fa fa-hand-o-right"></i><a id="ctl00_a6" style="text-decoration: none">
+                                                      <a id="ctl00_lnksaed" href="javascript:__doPostBack(&#39;ctl00$lnksaed&#39;,&#39;&#39;)">SAED Registration</a>
+                                                </a>
+
+                                                    </div>
+                                                </li>
+                                                <li><a href="default.aspx?logout=true" id="ctl00_alogout" style="text-decoration: none">
+                                                    <div class="link"><i class="fa fa-hand-o-right"></i>Log out</div>
+                                                </a></li>
+                                            </ul>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <!-- End Sidebar -->
+                                <div class="col-sm-10">
+
+                                    <div class="row">
+                                        <div class="col-sm-6" style="margin-bottom: 2px;">
+                                            <h4>
+                                                <span id="ctl00_lblCurrentUsername" class="label label-success" style="font-weight:normal;">gutsybeam@gmail.com</span></h4>
+                                        </div>
+                                        <div class="col-sm-6" style="text-align: right;">
+                                            <h4 class="comment-date">
+                                                <span id="ctl00_lblDate">Today's Date: Wednesday, December 24, 2025</span></h4>
+                                        </div>
+                                    </div>
+                                    <div class="auto-style1">
+
+                                        
+            <link rel="stylesheet" type="text/css" href="dataTables/dataTables.bootstrap.css" />
+    <style type="text/css">
+        .pure-table, table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .pure-table {
+            empty-cells: show;
+            border: 1px solid #cbcbcb;
+        }
+
+            .pure-table caption {
+                color: #000;
+                font: italic 85%/1 arial,sans-serif;
+                padding: 1em 0;
+                text-align: center;
+            }
+
+            .pure-table td, .pure-table th {
+                border-left: 1px solid #cbcbcb;
+                border-width: 0 0 0 1px;
+                font-size: inherit;
+                margin: 0;
+                overflow: visible;
+                padding: .5em 1em;
+            }
+
+                .pure-table td:first-child, .pure-table th:first-child {
+                    border-left-width: 0;
+                }
+
+            .pure-table thead {
+                background-color: #e0e0e0;
+                color: #000;
+                text-align: left;
+                vertical-align: bottom;
+            }
+
+            .pure-table td {
+                background-color: transparent;
+            }
+
+        .pure-table-odd td, .pure-table-striped tr:nth-child(2n-1) td {
+            background-color: #f2f2f2;
+        }
+
+        .pure-table-bordered td {
+            border-bottom: 1px solid #cbcbcb;
+        }
+
+        .pure-table-bordered tbody > tr:last-child > td {
+            border-bottom-width: 0;
+        }
+
+        .pure-table-horizontal td, .pure-table-horizontal th {
+            border-width: 0 0 1px;
+            border-bottom: 1px solid #cbcbcb;
+        }
+
+        .pure-table-horizontal tbody > tr:last-child > td {
+            border-bottom-width: 0;
+        }
+
+        input[type=file], input[type=file] + input {
+            display: inline-block;
+            background-color: #eee;
+            border: 1px solid gray;
+            font-size: 15px;
+            padding: 4px;
+        }
+
+            input[type=file] + input {
+                padding: 13px;
+                background-color: #00b7cd;
+            }
+
+        ::-webkit-file-upload-button {
+            -webkit-appearance: none;
+            background-color: #00b7cd;
+            border: 1px solid gray;
+            font-size: 15px;
+            padding: 8px;
+        }
+
+        ::-ms-browse {
+            background-color: #00b7cd;
+            border: 1px solid gray;
+            font-size: 15px;
+            padding: 8px;
+        }
+
+        input[type=file]::-ms-value {
+            border: none;
+        }
+
+        button, input, optgroup, select, textarea {
+            color: inherit;
+            font: inherit;
+            margin: 0;
+        }
+
+        .pure-button, input {
+            line-height: normal;
+        }
+
+        button {
+            overflow: visible;
+        }
+
+        button, select {
+            text-transform: none;
+        }
+
+        button, html input[type=button], input[type=reset], input[type=submit] {
+            -webkit-appearance: button;
+            cursor: pointer;
+        }
+
+            button[disabled], html input[disabled] {
+                cursor: default;
+            }
+
+            button::-moz-focus-inner, input::-moz-focus-inner {
+                border: 0;
+                padding: 0;
+            }
+    .auto-style2 {
+        font-size: 16px;
+    }
+    .auto-style3 {
+        font-weight: bold;
+        font-size: small;
+    }
+    </style>
+     
+    
+     <h2 class="auto-style2">LGA Monthly Clearance</h2>
+    <div id="Progress">
+        <div id="ctl00_ContentPlaceHolder2_udprogress" style="display:none;">
+	
+                <div style="text-align: center; color: #7D0000; font-size: 13px">
+                    <img id="ctl00_ContentPlaceHolder2_imgAddress" src="Images/Preloader.gif" />
+                </div>
+            
+</div>
+    </div>
+    <div id="ctl00_ContentPlaceHolder2_UpdatePanel1">
+	
+            <div class="col-md-10 col-md-offset-1">
+                <div class="row" style="left: 0px; top: 0px">
+                    
+                </div>
+                
+                <div id="ctl00_ContentPlaceHolder2_divmatch">
+                    <fieldset class="pnlwidth" style="border: solid thin rgba(0,0,0,.3); text-align: left">
+                        <legend style="padding: 2px; background: #f4f4f4; " class="auto-style3">Clearance Status</legend>
+
+                        <div>
+		<table class="dataTables_wrapper" cellspacing="0" rules="all" border="1" id="gdvdetails" style="width:100%;border-collapse:collapse;">
+			<thead>
+				<tr>
+					<th scope="col">S/N</th><th scope="col">Month</th><th scope="col">Status</th>
+				</tr>
+			</thead><tbody>
+				<tr>
+					<td>
+                                        <span id="lblsn">1</span>
+                                    </td><td>January/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">2</span>
+                                    </td><td>February/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">3</span>
+                                    </td><td>March/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">4</span>
+                                    </td><td>April/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">5</span>
+                                    </td><td>May/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">6</span>
+                                    </td><td>June/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">7</span>
+                                    </td><td>July/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">8</span>
+                                    </td><td>August/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">9</span>
+                                    </td><td>September/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">10</span>
+                                    </td><td>October/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">11</span>
+                                    </td><td>November/2025</td><td>Present</td>
+				</tr><tr>
+					<td>
+                                        <span id="lblsn">12</span>
+                                    </td><td>December/2025</td><td>Present</td>
+				</tr>
+			</tbody><tfoot>
+
+			</tfoot>
+		</table>
+	</div>
+                    </fieldset>
+                </div>
+            </div>
+                  <div>
+      
+      <script type="text/javascript" src="dataTables/jquery.dataTables.min.js"></script>
+       <script type="text/javascript">
+
+           Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
+           function EndRequestHandler(sender, args) {
+               $(document).ready(function () {                  
+                   applystyle();
+               });
+              
+           }
+           $(document).ready(function () {
+               applystyle();
+           });
+           function applystyle() {
+               if ($("#gdvdetails").lenghth !== 0) {
+                   $("#gdvdetails").DataTable();
+               }
+           }
+           
+          
+        </script>
+   
+   </div> 
+        
+</div>
+     
+
+
+                                    </div>
+                                </div>
+                                <!-- End Blog Post -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="container">
+                
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="footer-copyright">Copyright &copy; 2025  National Youth Service Corps. All rights reserved.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    
+
+<script type="text/javascript">
+//<![CDATA[
+Sys.Application.add_init(function() {
+    $create(Sys.UI._UpdateProgress, {"associatedUpdatePanelId":"ctl00_ContentPlaceHolder2_UpdatePanel1","displayAfter":500,"dynamicLayout":true}, null, null, $get("ctl00_ContentPlaceHolder2_udprogress"));
+});
+//]]>
+</script>
+</form>
+    <!-- Javascripts -->
+
+
+
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/jquery.fitvids.js"></script>
+    <script src="js/jquery.sequence-min.js"></script>
+    <script src="js/jquery.bxslider.js"></script>
+    
+    
+   
+    
 
 </body>
 </html>
-
 
