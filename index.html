@@ -3,217 +3,262 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Management Portal | Great Achiever International College</title>
+    <title>Great Achiever International College | Official Portal</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     
     <style>
-        :root { --maroon: #800000; --gold: #daa520; --navy: #000080; --white: #ffffff; --light: #f1f5f9; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #1e293b; }
+        :root { --primary: #800000; --secondary: #000033; --accent: #daa520; --bg: #f8fafc; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); margin: 0; color: #334155; }
         
-        /* Branding */
-        header { background: var(--maroon); color: white; padding: 25px; text-align: center; border-bottom: 5px solid var(--gold); }
-        .logo-main { font-size: 30px; font-weight: 800; letter-spacing: 1px; }
+        /* Professional School Header */
+        header { background: linear-gradient(to right, var(--primary), var(--secondary)); color: white; padding: 40px 20px; text-align: center; border-bottom: 6px solid var(--accent); }
+        .school-name { font-size: 32px; font-weight: 900; text-transform: uppercase; margin: 0; }
+        .motto { font-style: italic; color: var(--accent); margin-top: 5px; }
 
         /* Navigation */
-        nav { background: var(--navy); padding: 12px; display: flex; justify-content: center; gap: 25px; position: sticky; top: 0; z-index: 1000; }
-        nav a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
-        nav a:hover { color: var(--gold); }
+        nav { background: #fff; padding: 0; display: flex; justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); sticky: top; }
+        nav a { padding: 15px 25px; color: var(--secondary); text-decoration: none; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        nav a:hover { background: var(--primary); color: white; }
 
-        /* Layout */
-        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-        .card { background: var(--white); padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--maroon); }
+        /* Main Container */
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 30px; margin-bottom: 30px; border-left: 8px solid var(--primary); }
         .screen { display: none; }
-        .active { display: block; animation: fadeIn 0.4s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .active { display: block; animation: slideUp 0.5s ease; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* Form Elements */
-        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
-        .btn { padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
-        .btn-login { background: var(--navy); color: white; }
-        .btn-admin { background: #1e293b; color: white; }
-        .btn-pay { background: var(--gold); color: black; }
+        /* Inputs & Buttons */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        input, select { width: 100%; padding: 14px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 15px; box-sizing: border-box; }
+        .btn { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 6px; font-weight: 700; cursor: pointer; width: 100%; font-size: 16px; margin-top: 10px; }
+        .btn-pay { background: var(--accent); color: black; }
+        .btn-admin { background: var(--secondary); }
+
+        /* Student Record Table */
+        .table-wrap { overflow-x: auto; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { text-align: left; padding: 15px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        th { background: #f1f5f9; color: var(--primary); font-weight: 800; }
         
-        /* Data Tables */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
-        th { background: #f8fafc; color: var(--maroon); }
-
-        /* WhatsApp Floating Button */
-        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; text-align: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 100; display: flex; align-items: center; justify-content: center; text-decoration: none; }
-
-        /* Admin Badge */
-        .badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .badge { padding: 5px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; }
         .paid { background: #dcfce7; color: #166534; }
-        .pending { background: #fee2e2; color: #991b1b; }
+        .unpaid { background: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-main">GREAT ACHIEVER INTERNATIONAL COLLEGE</div>
-    <p>...Building Leaders of Tomorrow</p>
+    <h1 class="school-name">Great Achiever International College</h1>
+    <div class="motto">Knowledge • Excellence • Integrity</div>
 </header>
 
 <nav>
-    <a onclick="showScreen('login-screen')">Student Portal</a>
-    <a onclick="showScreen('admin-login')">Admin Office</a>
+    <a onclick="showScreen('student-login')">STUDENT LOGIN</a>
+    <a onclick="showScreen('admin-login')">STAFF PORTAL</a>
 </nav>
 
 <div class="container">
 
-    <div id="login-screen" class="screen active card">
-        <h2 style="color: var(--maroon);">Student Login</h2>
-        <p>Please enter your Matric Number as registered by the school.</p>
-        <input type="text" id="std-matric-input" placeholder="Matric Number (GAIC/SSS/001)">
-        <button class="btn btn-login" onclick="studentLogin()">Sign In to Portal</button>
+    <div id="student-login" class="screen active card">
+        <h2 style="color:var(--primary)">Student Portal Access</h2>
+        <p>Enter your unique Admission/Matric Number to view results and pay fees.</p>
+        <input type="text" id="login-id" placeholder="Admission Number (e.g. GAIC/2025/101)">
+        <button class="btn" onclick="handleStudentLogin()">Open Dashboard</button>
     </div>
 
     <div id="admin-login" class="screen card">
         <h2>Admin Authentication</h2>
-        <input type="password" id="admin-pass" placeholder="Enter Admin Security Code">
-        <button class="btn btn-admin" onclick="verifyAdmin()">Login as Administrator</button>
+        <input type="password" id="admin-key" placeholder="Enter Administrator Access Code">
+        <button class="btn btn-admin" onclick="handleAdminLogin()">Verify & Login</button>
     </div>
 
-    <div id="admin-dash" class="screen">
+    <div id="admin-panel" class="screen">
         <div class="card">
-            <h3>Register New Student</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <input type="text" id="reg-name" placeholder="Full Name">
-                <input type="text" id="reg-matric" placeholder="Matric Number">
-                <select id="reg-class">
-                    <option value="JSS">Junior Secondary (₦50,000)</option>
-                    <option value="SSS_SCIENCE">Senior Science (₦80,000)</option>
-                    <option value="SSS_ART">Senior Art/Comm (₦70,000)</option>
-                </select>
-                <button class="btn btn-login" onclick="registerStudent()">Add Student to System</button>
+            <h2 style="color:var(--primary)">New Student Enrollment</h2>
+            <div class="form-grid">
+                <div>
+                    <label>Full Name</label>
+                    <input type="text" id="reg-name" placeholder="Firstname Lastname">
+                </div>
+                <div>
+                    <label>Admission Number</label>
+                    <input type="text" id="reg-id" placeholder="GAIC/2025/xxx">
+                </div>
+                <div>
+                    <label>Class Category</label>
+                    <select id="reg-category" onchange="calculateFees()">
+                        <option value="JSS">Junior Secondary (JSS 1-3)</option>
+                        <option value="SSS_SCIENCE">Senior Secondary (Science)</option>
+                        <option value="SSS_ART">Senior Secondary (Art & Commerce)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Specific Class</label>
+                    <select id="reg-class">
+                        <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+                        <option>SSS 1</option><option>SSS 2</option><option>SSS 3</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Entry Session</label>
+                    <input type="text" id="reg-session" value="2025/2026">
+                </div>
+                <div>
+                    <label>Assigned Fees</label>
+                    <input type="text" id="reg-fee-display" value="₦50,000" disabled>
+                </div>
             </div>
+            <button class="btn" onclick="saveStudent()">Register & Generate Profile</button>
         </div>
 
         <div class="card">
-            <h3>Registered Students & Payments</h3>
-            <table id="admin-student-list">
-                <tr><th>Name</th><th>Matric</th><th>Class</th><th>Fees</th></tr>
+            <h3>Registered Student Records</h3>
+            <div class="table-wrap">
+                <table id="record-table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>Adm Number</th>
+                            <th>Class</th>
+                            <th>Session</th>
+                            <th>Fees</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-list-body">
+                        </tbody>
                 </table>
+            </div>
         </div>
     </div>
 
     <div id="student-dash" class="screen">
-        <div class="card" style="background: var(--maroon); color: white;">
-            <h2>Student Dashboard</h2>
-            <p>Welcome, <span id="portal-name" style="font-weight: bold; color: var(--gold);">...</span></p>
-            <p>Matric: <span id="portal-matric">...</span> | Class: <span id="portal-class">...</span></p>
+        <div class="card" style="border-left: 8px solid var(--accent); background: var(--secondary); color: white;">
+            <h2>Student Profile</h2>
+            <div class="form-grid">
+                <p>Name: <span id="s-name" style="color:var(--accent); font-weight:bold;">...</span></p>
+                <p>ID: <span id="s-id">...</span></p>
+                <p>Class: <span id="s-class">...</span></p>
+                <p>Session: <span id="s-session">...</span></p>
+            </div>
         </div>
 
         <div class="card">
-            <h3>💳 Fees Management</h3>
-            <p>Total Tuition: <span id="portal-fee-amount" style="font-weight:bold;">₦0.00</span></p>
-            <div id="fee-status-box" class="badge pending" style="display:inline-block; margin-bottom:15px;">UNPAID</div>
-            <button class="btn btn-pay" id="pay-btn" onclick="triggerPayment()">Pay Fees Now</button>
-        </div>
-
-        <div class="card">
-            <h3>📊 Termly Results</h3>
-            <table>
-                <tr><th>Subject</th><th>Score</th><th>Grade</th></tr>
-                <tr><td>Mathematics</td><td>82</td><td>A1</td></tr>
-                <tr><td>English Language</td><td>75</td><td>B2</td></tr>
-            </table>
+            <h3>💳 Financial Statement</h3>
+            <p>Your current tuition for this term is <strong id="s-fee-amt">₦0.00</strong></p>
+            <div id="s-status" class="badge unpaid">PENDING PAYMENT</div>
+            <br><br>
+            <button id="pay-button" class="btn btn-pay" onclick="payWithFlutterwave()">Secure Payment via Flutterwave</button>
         </div>
     </div>
 
 </div>
 
-<a href="https://wa.me/YOUR_PHONE_NUMBER" class="whatsapp-float" target="_blank">
-    <i style="font-style: normal;">💬</i>
-</a>
-
 <script>
-    // --- DATABASE CONFIG ---
-    // (Reminder: Connect your real Firebase project here)
-    let localDB = []; // This simulates a database for now. In Firebase, use db.collection('students')
-
-    let activeStudent = null;
+    // --- SCHOOL DATABASE (LOCAL FOR TESTING) ---
+    // Note: To make this permanent, connect Firebase Firestore
+    let students = [];
+    let loggedInStudent = null;
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
     }
 
-    // --- ADMIN LOGIC ---
-    function verifyAdmin() {
-        const pass = document.getElementById('admin-pass').value;
-        if(pass === "1234") { // Use a secure password
-            showScreen('admin-dash');
-        } else {
-            alert("Wrong Admin Code!");
-        }
+    // Admin Access Code
+    function handleAdminLogin() {
+        if(document.getElementById('admin-key').value === "admin777") {
+            showScreen('admin-panel');
+        } else { alert("Unauthorized Access!"); }
     }
 
-    function registerStudent() {
+    // Enrollment Logic
+    function calculateFees() {
+        const cat = document.getElementById('reg-category').value;
+        const feeInput = document.getElementById('reg-fee-display');
+        if(cat === "JSS") feeInput.value = "₦50,000";
+        else if(cat === "SSS_SCIENCE") feeInput.value = "₦80,000";
+        else feeInput.value = "₦70,000";
+    }
+
+    function saveStudent() {
         const name = document.getElementById('reg-name').value;
-        const matric = document.getElementById('reg-matric').value;
-        const level = document.getElementById('reg-class').value;
+        const id = document.getElementById('reg-id').value;
+        const cls = document.getElementById('reg-class').value;
+        const cat = document.getElementById('reg-category').value;
+        const session = document.getElementById('reg-session').value;
         
-        let fee = 0;
-        if(level === "JSS") fee = 50000;
-        else if(level === "SSS_SCIENCE") fee = 80000;
-        else fee = 70000;
+        let fee = (cat === "JSS") ? 50000 : (cat === "SSS_SCIENCE" ? 80000 : 70000);
 
-        const newStudent = { name, matric, level, fee, paid: false };
-        localDB.push(newStudent);
-        
-        updateAdminList();
-        alert("Student " + name + " Registered Successfully!");
+        if(!name || !id) return alert("Please fill all details");
+
+        const student = { name, id, cls, session, fee, status: "Unpaid" };
+        students.push(student);
+        updateAdminTable();
+        alert("Student Enrollment Successful!");
     }
 
-    function updateAdminList() {
-        const table = document.getElementById('admin-student-list');
-        table.innerHTML = `<tr><th>Name</th><th>Matric</th><th>Class</th><th>Fees</th></tr>`;
-        localDB.forEach(s => {
-            table.innerHTML += `<tr><td>${s.name}</td><td>${s.matric}</td><td>${s.level}</td><td>${s.paid ? '<span class="badge paid">PAID</span>' : '<span class="badge pending">UNPAID</span>'}</td></tr>`;
+    function updateAdminTable() {
+        const body = document.getElementById('admin-list-body');
+        body.innerHTML = "";
+        students.forEach(s => {
+            body.innerHTML += `<tr>
+                <td>${s.name}</td>
+                <td>${s.id}</td>
+                <td>${s.cls}</td>
+                <td>${s.session}</td>
+                <td>₦${s.fee.toLocaleString()}</td>
+                <td><span class="badge ${s.status.toLowerCase()}">${s.status}</span></td>
+            </tr>`;
         });
     }
 
-    // --- STUDENT LOGIC ---
-    function studentLogin() {
-        const matric = document.getElementById('std-matric-input').value;
-        // Search "Database"
-        const student = localDB.find(s => s.matric === matric);
+    // Student Portal Logic
+    function handleStudentLogin() {
+        const id = document.getElementById('login-id').value;
+        const found = students.find(s => s.id === id);
 
-        if(student) {
-            activeStudent = student;
-            document.getElementById('portal-name').innerText = student.name;
-            document.getElementById('portal-matric').innerText = student.matric;
-            document.getElementById('portal-class').innerText = student.level.replace("_", " ");
-            document.getElementById('portal-fee-amount').innerText = "₦" + student.fee.toLocaleString();
+        if(found) {
+            loggedInStudent = found;
+            document.getElementById('s-name').innerText = found.name;
+            document.getElementById('s-id').innerText = found.id;
+            document.getElementById('s-class').innerText = found.cls;
+            document.getElementById('s-session').innerText = found.session;
+            document.getElementById('s-fee-amt').innerText = "₦" + found.fee.toLocaleString();
             
+            // Toggle Pay button based on status
+            if(found.status === "Paid") {
+                document.getElementById('s-status').className = "badge paid";
+                document.getElementById('s-status').innerText = "PAID - RECORD UPDATED";
+                document.getElementById('pay-button').style.display = "none";
+            }
             showScreen('student-dash');
         } else {
-            alert("Matric Number not found. Please contact the Admin to register you.");
+            alert("Record not found. Ensure you have been registered by the Admin.");
         }
     }
 
-    function triggerPayment() {
+    // Flutterwave Integration
+    function payWithFlutterwave() {
         FlutterwaveCheckout({
-            public_key: "FLWPUBK_TEST-YOUR-KEY-HERE",
-            tx_ref: "GAIC-" + activeStudent.matric + "-" + Date.now(),
-            amount: activeStudent.fee,
-            currency: "NGN",
-            customer: {
-                email: "student@greatachiever.com",
-                name: activeStudent.name,
-            },
-            callback: function (data) {
-                if (data.status === "successful") {
-                    activeStudent.paid = true;
-                    document.getElementById('fee-status-box').innerText = "PAID";
-                    document.getElementById('fee-status-box').className = "badge paid";
-                    document.getElementById('pay-btn').style.display = "none";
-                    updateAdminList();
-                }
-            },
+          public_key: "FLWPUBK_TEST-YOUR-KEY-HERE",
+          tx_ref: "GAIC-" + loggedInStudent.id + "-" + Date.now(),
+          amount: loggedInStudent.fee,
+          currency: "NGN",
+          customer: {
+            email: "student@greatachiever.com",
+            name: loggedInStudent.name,
+          },
+          callback: function (data) {
+            if (data.status === "successful") {
+                loggedInStudent.status = "Paid";
+                updateAdminTable();
+                handleStudentLogin(); // Refresh dashboard
+                alert("Payment Confirmed! Receipt Generated.");
+            }
+          }
         });
     }
 </script>
