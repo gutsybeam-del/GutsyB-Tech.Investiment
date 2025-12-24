@@ -3,184 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal | Great Achiever International College</title>
+    <title>Management Portal | Great Achiever International College</title>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     
     <style>
-        :root { --maroon: #800000; --gold: #daa520; --navy: #000080; --light: #f4f4f4; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); margin: 0; }
+        :root { --maroon: #800000; --gold: #daa520; --navy: #000080; --white: #ffffff; --light: #f1f5f9; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #1e293b; }
         
-        /* Header & Branding */
-        header { background: var(--maroon); color: white; padding: 20px; text-align: center; border-bottom: 5px solid var(--gold); }
-        .logo-text { font-size: 28px; font-weight: bold; letter-spacing: 2px; }
-        
+        /* Branding */
+        header { background: var(--maroon); color: white; padding: 25px; text-align: center; border-bottom: 5px solid var(--gold); }
+        .logo-main { font-size: 30px; font-weight: 800; letter-spacing: 1px; }
+
         /* Navigation */
-        nav { background: var(--navy); padding: 10px; display: flex; justify-content: center; gap: 20px; }
-        nav a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; }
+        nav { background: var(--navy); padding: 12px; display: flex; justify-content: center; gap: 25px; position: sticky; top: 0; z-index: 1000; }
+        nav a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; font-size: 14px; text-transform: uppercase; }
+        nav a:hover { color: var(--gold); }
 
-        /* Portal Logic Styles */
-        .container { max-width: 1000px; margin: 30px auto; padding: 20px; }
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; border-top: 4px solid var(--maroon); }
+        /* Layout */
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .card { background: var(--white); padding: 30px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--maroon); }
         .screen { display: none; }
-        .active { display: block; }
+        .active { display: block; animation: fadeIn 0.4s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* UI Elements */
-        .btn { padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; }
-        .btn-pay { background: var(--gold); color: black; }
+        /* Form Elements */
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
+        .btn { padding: 15px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
         .btn-login { background: var(--navy); color: white; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn-admin { background: #1e293b; color: white; }
+        .btn-pay { background: var(--gold); color: black; }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background: var(--maroon); color: white; }
-        .status-paid { color: green; font-weight: bold; }
-        .status-debt { color: red; font-weight: bold; }
+        /* Data Tables */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; color: var(--maroon); }
+
+        /* WhatsApp Floating Button */
+        .whatsapp-float { position: fixed; bottom: 30px; right: 30px; background: #25d366; color: white; width: 60px; height: 60px; border-radius: 50%; text-align: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 100; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+
+        /* Admin Badge */
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .paid { background: #dcfce7; color: #166534; }
+        .pending { background: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-text">GREAT ACHIEVER INTERNATIONAL COLLEGE</div>
-    <p>Knowledge, Excellence, and Integrity</p>
+    <div class="logo-main">GREAT ACHIEVER INTERNATIONAL COLLEGE</div>
+    <p>...Building Leaders of Tomorrow</p>
 </header>
 
 <nav>
-    <a onclick="showScreen('login-screen')">Login</a>
-    <a onclick="showScreen('result-screen')">Check Result</a>
-    <a onclick="showScreen('fees-screen')">Pay Fees</a>
+    <a onclick="showScreen('login-screen')">Student Portal</a>
+    <a onclick="showScreen('admin-login')">Admin Office</a>
 </nav>
 
 <div class="container">
 
     <div id="login-screen" class="screen active card">
-        <h2 style="color: var(--maroon);">Student Portal Login</h2>
-        <p>Enter your Matric/Admission Number to access your dashboard.</p>
-        <input type="text" id="matric-no" placeholder="Matric Number (e.g. GAIC/2025/001)">
-        <select id="student-level">
-            <option value="JSS">Junior Secondary (JSS 1-3)</option>
-            <option value="SSS_SCIENCE">Senior Secondary (Science)</option>
-            <option value="SSS_ART">Senior Secondary (Art & Commerce)</option>
-        </select>
-        <button class="btn btn-login" onclick="loginPortal()">Access Portal</button>
+        <h2 style="color: var(--maroon);">Student Login</h2>
+        <p>Please enter your Matric Number as registered by the school.</p>
+        <input type="text" id="std-matric-input" placeholder="Matric Number (GAIC/SSS/001)">
+        <button class="btn btn-login" onclick="studentLogin()">Sign In to Portal</button>
     </div>
 
-    <div id="dash-screen" class="screen">
+    <div id="admin-login" class="screen card">
+        <h2>Admin Authentication</h2>
+        <input type="password" id="admin-pass" placeholder="Enter Admin Security Code">
+        <button class="btn btn-admin" onclick="verifyAdmin()">Login as Administrator</button>
+    </div>
+
+    <div id="admin-dash" class="screen">
         <div class="card">
-            <h2>Welcome, <span id="display-name">Student</span></h2>
-            <p>Class: <span id="display-class">...</span></p>
-        </div>
-
-        <div id="result-screen" class="card">
-            <h3>📊 Academic Statement (Termly Result)</h3>
-            <table>
-                <thead>
-                    <tr><th>Subject</th><th>Test (40)</th><th>Exam (60)</th><th>Total</th><th>Grade</th></tr>
-                </thead>
-                <tbody id="result-body">
-                    <tr><td>Mathematics</td><td>32</td><td>55</td><td>87</td><td>A1</td></tr>
-                    <tr><td>English</td><td>28</td><td>42</td><td>70</td><td>B2</td></tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div id="fees-screen" class="card">
-            <h3>💳 School Fees Payment</h3>
-            <div style="font-size: 18px; margin-bottom: 10px;">
-                Required Fee: <span id="fee-amount" style="font-weight:bold;">₦0.00</span><br>
-                Status: <span id="fee-status" class="status-debt">UNPAID</span>
+            <h3>Register New Student</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <input type="text" id="reg-name" placeholder="Full Name">
+                <input type="text" id="reg-matric" placeholder="Matric Number">
+                <select id="reg-class">
+                    <option value="JSS">Junior Secondary (₦50,000)</option>
+                    <option value="SSS_SCIENCE">Senior Science (₦80,000)</option>
+                    <option value="SSS_ART">Senior Art/Comm (₦70,000)</option>
+                </select>
+                <button class="btn btn-login" onclick="registerStudent()">Add Student to System</button>
             </div>
-            <button class="btn btn-pay" onclick="processPayment()">Pay Outstanding Balance</button>
+        </div>
+
+        <div class="card">
+            <h3>Registered Students & Payments</h3>
+            <table id="admin-student-list">
+                <tr><th>Name</th><th>Matric</th><th>Class</th><th>Fees</th></tr>
+                </table>
+        </div>
+    </div>
+
+    <div id="student-dash" class="screen">
+        <div class="card" style="background: var(--maroon); color: white;">
+            <h2>Student Dashboard</h2>
+            <p>Welcome, <span id="portal-name" style="font-weight: bold; color: var(--gold);">...</span></p>
+            <p>Matric: <span id="portal-matric">...</span> | Class: <span id="portal-class">...</span></p>
+        </div>
+
+        <div class="card">
+            <h3>💳 Fees Management</h3>
+            <p>Total Tuition: <span id="portal-fee-amount" style="font-weight:bold;">₦0.00</span></p>
+            <div id="fee-status-box" class="badge pending" style="display:inline-block; margin-bottom:15px;">UNPAID</div>
+            <button class="btn btn-pay" id="pay-btn" onclick="triggerPayment()">Pay Fees Now</button>
+        </div>
+
+        <div class="card">
+            <h3>📊 Termly Results</h3>
+            <table>
+                <tr><th>Subject</th><th>Score</th><th>Grade</th></tr>
+                <tr><td>Mathematics</td><td>82</td><td>A1</td></tr>
+                <tr><td>English Language</td><td>75</td><td>B2</td></tr>
+            </table>
         </div>
     </div>
 
 </div>
 
-<script>
-    // --- BACKEND CONFIGURATION ---
-    // Initialize Firebase (Paste your real keys here to make it save data)
-    const firebaseConfig = {
-        apiKey: "YOUR_API_KEY",
-        authDomain: "great-achiever-portal.firebaseapp.com",
-        projectId: "great-achiever-portal",
-        appId: "YOUR_APP_ID"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+<a href="https://wa.me/YOUR_PHONE_NUMBER" class="whatsapp-float" target="_blank">
+    <i style="font-style: normal;">💬</i>
+</a>
 
-    // Portal Logic
-    let currentUser = {
-        matric: "",
-        level: "",
-        fee: 0
-    };
+<script>
+    // --- DATABASE CONFIG ---
+    // (Reminder: Connect your real Firebase project here)
+    let localDB = []; // This simulates a database for now. In Firebase, use db.collection('students')
+
+    let activeStudent = null;
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        // If they click "Check Result" or "Fees" before logging in, send them back
-        if(id !== 'login-screen' && currentUser.matric === "") {
-            alert("Please login first!");
-            showScreen('login-screen');
+    }
+
+    // --- ADMIN LOGIC ---
+    function verifyAdmin() {
+        const pass = document.getElementById('admin-pass').value;
+        if(pass === "1234") { // Use a secure password
+            showScreen('admin-dash');
+        } else {
+            alert("Wrong Admin Code!");
         }
     }
 
-    function loginPortal() {
-        const matric = document.getElementById('matric-no').value;
-        const level = document.getElementById('student-level').value;
-
-        if(!matric) return alert("Enter your Matric Number");
-
-        currentUser.matric = matric;
-        currentUser.level = level;
-
-        // Set Fees based on your requirements
-        if(level === "JSS") currentUser.fee = 50000;
-        else if(level === "SSS_SCIENCE") currentUser.fee = 80000;
-        else if(level === "SSS_ART") currentUser.fee = 70000;
-
-        // Update UI
-        document.getElementById('display-name').innerText = matric;
-        document.getElementById('display-class').innerText = level.replace("_", " ");
-        document.getElementById('fee-amount').innerText = "₦" + currentUser.fee.toLocaleString();
+    function registerStudent() {
+        const name = document.getElementById('reg-name').value;
+        const matric = document.getElementById('reg-matric').value;
+        const level = document.getElementById('reg-class').value;
         
-        showScreen('dash-screen');
+        let fee = 0;
+        if(level === "JSS") fee = 50000;
+        else if(level === "SSS_SCIENCE") fee = 80000;
+        else fee = 70000;
+
+        const newStudent = { name, matric, level, fee, paid: false };
+        localDB.push(newStudent);
+        
+        updateAdminList();
+        alert("Student " + name + " Registered Successfully!");
     }
 
-    // --- PAYMENT BACKEND (FLUTTERWAVE) ---
-    function processPayment() {
+    function updateAdminList() {
+        const table = document.getElementById('admin-student-list');
+        table.innerHTML = `<tr><th>Name</th><th>Matric</th><th>Class</th><th>Fees</th></tr>`;
+        localDB.forEach(s => {
+            table.innerHTML += `<tr><td>${s.name}</td><td>${s.matric}</td><td>${s.level}</td><td>${s.paid ? '<span class="badge paid">PAID</span>' : '<span class="badge pending">UNPAID</span>'}</td></tr>`;
+        });
+    }
+
+    // --- STUDENT LOGIC ---
+    function studentLogin() {
+        const matric = document.getElementById('std-matric-input').value;
+        // Search "Database"
+        const student = localDB.find(s => s.matric === matric);
+
+        if(student) {
+            activeStudent = student;
+            document.getElementById('portal-name').innerText = student.name;
+            document.getElementById('portal-matric').innerText = student.matric;
+            document.getElementById('portal-class').innerText = student.level.replace("_", " ");
+            document.getElementById('portal-fee-amount').innerText = "₦" + student.fee.toLocaleString();
+            
+            showScreen('student-dash');
+        } else {
+            alert("Matric Number not found. Please contact the Admin to register you.");
+        }
+    }
+
+    function triggerPayment() {
         FlutterwaveCheckout({
-            public_key: "FLWPUBK_TEST-YOUR-KEY-HERE", // Change to Live Key later
-            tx_ref: "GAIC-" + currentUser.matric + "-" + Date.now(),
-            amount: currentUser.fee,
+            public_key: "FLWPUBK_TEST-YOUR-KEY-HERE",
+            tx_ref: "GAIC-" + activeStudent.matric + "-" + Date.now(),
+            amount: activeStudent.fee,
             currency: "NGN",
-            payment_options: "card, banktransfer, ussd",
             customer: {
                 email: "student@greatachiever.com",
-                name: currentUser.matric,
+                name: activeStudent.name,
             },
             callback: function (data) {
                 if (data.status === "successful") {
-                    document.getElementById('fee-status').innerText = "PAID";
-                    document.getElementById('fee-status').className = "status-paid";
-                    alert("Payment Verified! Thank you.");
-                    
-                    // Save to Backend (Firebase)
-                    db.collection("payments").doc(currentUser.matric).set({
-                        amount: currentUser.fee,
-                        status: "Paid",
-                        date: new Date()
-                    });
+                    activeStudent.paid = true;
+                    document.getElementById('fee-status-box').innerText = "PAID";
+                    document.getElementById('fee-status-box').className = "badge paid";
+                    document.getElementById('pay-btn').style.display = "none";
+                    updateAdminList();
                 }
-            },
-            customizations: {
-                title: "Great Achiever College",
-                description: "School Fees Payment for " + currentUser.level,
-                logo: "https://via.placeholder.com/150",
             },
         });
     }
 </script>
+
 </body>
 </html>
