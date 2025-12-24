@@ -3,11 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartSchool Portal | Nigeria</title>
+    <title>Great Achiever | Nigeria</title>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <style>
         :root { --blue: #1e3a8a; --gold: #f59e0b; --light: #f3f4f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #333; }
+<script src="https://checkout.flutterwave.com/v3.js"></script>
+<button type="button" onclick="makePayment()" style="background-color: #f5a623; color: #fff; padding: 15px 30px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
+    Pay Now with Flutterwave
+</button>
+<script>
+  function makePayment() {
+    FlutterwaveCheckout({
+      public_key: "FLWPUBK_TEST-YOUR-PUBLIC-KEY-HERE", // Get this from your Flutterwave Dashboard
+      tx_ref: "TXN-" + Date.now(), // Unique reference for every transaction
+      amount: 2500, // Amount in Naira
+      currency: "NGN",
+      payment_options: "card, banktransfer, ussd",
+      customer: {
+        email: "user@example.com",
+        phone_number: "08100000000",
+        name: "Customer Name",
+      },
+      callback: function (data) {
+        console.log("Payment callback data:", data);
+        if (data.status === "successful") {
+            alert("Payment Successful! Reference: " + data.transaction_id);
+            // Redirect user or update database here
+        } else {
+            alert("Payment failed!");
+        }
+      },
+      onclose: function() {
+        alert("You closed the payment window.");
+      },
+      customizations: {
+        title: "My Business Name",
+        description: "Payment for Service/Product",
+        logo: "https://your-logo-url.com/logo.png",
+      },
+    });
+  }
+</script>        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #333; }
         
         /* Header */
         header { background: var(--blue); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -141,3 +177,4 @@
 
 </body>
 </html>
+
