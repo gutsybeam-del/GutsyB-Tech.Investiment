@@ -3,161 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Great Achiever | Professional Portal</title>
+    <title>Great Achiever International | Standard Portal</title>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <style>
-        :root { --primary: #800000; --navy: #001f3f; --gold: #daa520; --light: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        :root { --primary: #800000; --navy: #001f3f; --gold: #daa520; --light: #f4f7f6; --success: #2e7d32; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--light); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        header { background: var(--primary); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--gold); }
-        .wrapper { display: flex; flex: 1; overflow: hidden; }
+        /* Layout Components */
+        header { background: var(--primary); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--gold); z-index: 10; }
+        .main-container { display: flex; flex: 1; overflow: hidden; }
         
-        /* Sidebar */
-        .sidebar { width: 260px; background: var(--navy); color: white; display: none; flex-direction: column; padding: 20px 0; }
-        .sidebar a { padding: 15px 25px; color: #cbd5e1; text-decoration: none; display: block; cursor: pointer; border-left: 4px solid transparent; }
-        .sidebar a:hover { background: #1e293b; color: white; border-left-color: var(--gold); }
+        /* Sidebar Navigation */
+        .sidebar { width: 280px; background: var(--navy); color: white; display: none; flex-direction: column; padding-top: 20px; box-shadow: 2px 0 10px rgba(0,0,0,0.2); }
+        .sidebar a { padding: 15px 25px; color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.3s; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar a:hover, .sidebar a.active-tab { background: rgba(255,255,255,0.1); color: var(--gold); }
+        .logout-link { color: #ff6b6b !important; margin-top: auto; border-top: 1px solid #333; }
 
         /* Content Area */
         .content { flex: 1; padding: 25px; overflow-y: auto; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--primary); }
-        .screen { display: none; }
-        .active-screen { display: block; animation: fadeIn 0.3s ease; }
-
-        /* Admin Navigation */
-        .admin-nav { background: #eee; padding: 10px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 10px; }
-        .back-btn { background: #666; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 13px; cursor: pointer; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; position: relative; }
+        .screen { display: none; animation: fadeIn 0.3s ease; }
+        .active-screen { display: block; }
 
         /* Student UI */
-        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; display: block; margin: 10px auto; background: #ddd; }
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; transition: 0.2s; }
+        .profile-header { text-align: center; background: var(--navy); color: white; padding: 20px; border-radius: 12px 12px 0 0; margin: -25px -25px 20px -25px; }
+        .profile-img { width: 130px; height: 130px; border-radius: 50%; border: 4px solid var(--gold); object-fit: cover; background: #eee; margin-top: 10px; }
+        
+        /* Buttons & Inputs */
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 15px; }
+        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; transition: 0.2s; }
         .btn-main { background: var(--primary); color: white; }
-        .btn-ad { background: #25d366; color: white; animation: pulse 2s infinite; }
+        .btn-gold { background: var(--gold); color: black; }
+        .btn-verify { background: var(--success); color: white; animation: pulse 2s infinite; }
 
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Admin Specific */
+        .admin-nav { background: #eee; padding: 10px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="font-weight: 900; font-size: 20px;">GREAT ACHIEVER COLLEGE</div>
-    <div id="user-display" style="font-size: 12px;">Portal Guest</div>
+    <div style="font-weight: 900; letter-spacing: 1px;">GREAT ACHIEVER COLLEGE PORTAL</div>
+    <div id="user-tag" style="font-size: 13px; opacity: 0.9;">System Offline</div>
 </header>
 
-<div class="wrapper">
+<div class="main-container">
     <div class="sidebar" id="sidebar">
-        <a onclick="showScreen('s-home')">🏠 My Dashboard</a>
-        <a onclick="showScreen('s-results')">📊 View Results</a>
-        <a onclick="showScreen('s-fees')">💳 Pay Fees</a>
-        <a onclick="showScreen('s-profile')">👤 My Passport</a>
-        <a onclick="location.reload()" style="color:#ff6b6b; font-weight:bold; border-top:1px solid #333;">🚪 Logout</a>
+        <a onclick="showScreen('s-home')">🏠 Student Home</a>
+        <a onclick="showScreen('s-results')">📊 Academic Results</a>
+        <a onclick="showScreen('s-fees')">💳 Payments & Receipts</a>
+        <a onclick="showScreen('s-idcard')">🪪 Digital ID Card</a>
+        <a onclick="showScreen('s-settings')">⚙️ Account Settings</a>
+        <a onclick="location.reload()" class="logout-link">🚪 Sign Out</a>
     </div>
 
     <div class="content">
-        <div id="login-screen" class="screen active-screen card" style="max-width: 400px; margin: 40px auto;">
-            <h2 style="text-align:center; color:var(--primary);">Student Login</h2>
-            <input type="text" id="l-id" placeholder="Admission Number">
-            <input type="password" id="l-pass" placeholder="Password">
-            <button class="btn btn-main" onclick="doLogin()">Sign In</button>
-            <p onclick="adminGate()" style="text-align:center; font-size:11px; color:gray; cursor:pointer; margin-top:15px;">Staff Management</p>
+        <div id="login-screen" class="screen active-screen card" style="max-width: 420px; margin: 50px auto;">
+            <h2 style="text-align:center; color:var(--primary); margin-bottom: 30px;">Student Access</h2>
+            <label>Admission Number</label>
+            <input type="text" id="l-id" placeholder="Enter ID">
+            <label>Password</label>
+            <input type="password" id="l-pass" placeholder="Enter Password">
+            <button class="btn btn-main" onclick="doLogin()">Secure Login</button>
+            <p onclick="adminGate()" style="text-align:center; font-size:11px; color:gray; cursor:pointer; margin-top:20px;">Staff Portal Entry</p>
         </div>
 
-        <div id="admin-screen" class="screen card">
+        <div id="admin-screen" class="screen">
             <div class="admin-nav">
-                <button class="back-btn" onclick="location.reload()">⬅ Back to Portal Home</button>
-                <span style="font-weight:bold; color:var(--primary); margin-left:auto;">Admin Office</span>
+                <button class="btn" style="width: auto; background:#555; color:white;" onclick="location.reload()">⬅ Exit Admin</button>
+                <strong style="color:var(--primary)">ADMINISTRATOR OFFICE</strong>
             </div>
             
-            <h3>Step 1: Enroll New Student</h3>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <input type="text" id="r-name" placeholder="Full Name">
-                <input type="text" id="r-id" placeholder="Admission ID">
-                <select id="r-class">
-                    <option value="50000">JSS (₦50,000)</option>
-                    <option value="70000">SSS Art (₦70,000)</option>
-                    <option value="80000">SSS Science (₦80,000)</option>
-                </select>
-                <input type="text" id="r-pass" placeholder="Password" value="1234">
+            <div class="card">
+                <h3>Enroll Student</h3>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="text" id="r-name" placeholder="Full Name">
+                    <input type="text" id="r-id" placeholder="Admission ID">
+                    <select id="r-class">
+                        <option value="50000">JSS (₦50k)</option>
+                        <option value="70000">SSS Art (₦70k)</option>
+                        <option value="80000">SSS Science (₦80k)</option>
+                    </select>
+                    <input type="text" id="r-pass" placeholder="Password" value="1234">
+                </div>
+                <button class="btn btn-main" onclick="enroll()">Register Student</button>
             </div>
-            <button class="btn btn-main" onclick="enroll()">Register & Save Student</button>
-            
-            <hr style="margin:30px 0;">
-            
-            <h3>Step 2: Input Academic Scores</h3>
-            <select id="adm-sel" style="background:#fff9e6;"></select>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <input type="number" id="adm-m" placeholder="Mathematics Score">
-                <input type="number" id="adm-e" placeholder="English Score">
+
+            <div class="card">
+                <h3>Input Scores</h3>
+                <select id="adm-sel"></select>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="number" id="adm-m" placeholder="Math Score">
+                    <input type="number" id="adm-e" placeholder="English Score">
+                </div>
+                <button class="btn btn-main" style="background:var(--navy)" onclick="saveRes()">Save Results</button>
             </div>
-            <button class="btn btn-main" style="background:var(--navy)" onclick="saveRes()">Upload Result to Student</button>
         </div>
 
-        <div id="s-home" class="screen card" style="text-align:center;">
-            <img src="" id="h-img" class="profile-img">
-            <h2 id="h-name">Student Name</h2>
-            <p id="h-id">ID: 000</p>
+        <div id="s-home" class="screen card">
+            <div class="profile-header">
+                <img src="" id="h-img" class="profile-img">
+                <h2 id="h-name" style="margin:10px 0 5px 0;">Student Name</h2>
+                <p id="h-id" style="opacity:0.8; margin:0;">Admission ID</p>
+            </div>
+            <h3>School News & Updates</h3>
+            <div style="border-left: 4px solid var(--gold); padding-left: 15px; background: #fff9e6; padding: 10px;">
+                <p>📢 Welcome to the new Academic Session! Please ensure your passport is uploaded for your ID card.</p>
+            </div>
             
-            <div style="background:#e8f5e9; border:2px dashed #2e7d32; padding:20px; border-radius:12px; margin-top:20px;">
-                <h3 style="margin:0; color:#1b5e20;">🔓 Result Unlocker</h3>
-                <p style="font-size: 13px;">To see your termly results, you must click the link below to verify your academic session.</p>
-                <button class="btn btn-ad" onclick="unlockProfit()">Click to Verify & Unlock Results</button>
+            <div style="background:#e8f5e9; padding:20px; border-radius:12px; margin-top:20px; text-align:center; border: 2px dashed var(--success);">
+                <h4 style="margin:0; color:var(--success);">Unlock Results Feature</h4>
+                <p style="font-size: 13px;">Click the button below to verify your session and support school maintenance.</p>
+                <button class="btn btn-verify" onclick="unlockAds()">Verify Account & Unlock</button>
             </div>
         </div>
 
         <div id="s-results" class="screen card">
-            <h2>Academic Performance</h2>
-            <div id="result-locked-msg" style="color:red; font-weight:bold; text-align:center; padding:20px;">
-                ⚠️ RESULTS ARE LOCKED!<br>Go to "Dashboard" and click "Verify" to unlock.
+            <h2>Academic Transcript</h2>
+            <div id="lock-msg" style="text-align:center; padding:40px; color:#d32f2f;">
+                <h3>🔒 Content Locked</h3>
+                <p>Go to the <b>Dashboard</b> and click the <b>Verify</b> button to view your scores.</p>
             </div>
             <table width="100%" border="1" style="border-collapse:collapse; display:none;" id="res-table">
                 <tr style="background:#eee;"><th>Subject</th><th>Score</th><th>Grade</th></tr>
-                <tr><td>Mathematics</td><td id="v-m">-</td><td id="g-m">-</td></tr>
-                <tr><td>English Language</td><td id="v-e">-</td><td id="g-e">-</td></tr>
+                <tr><td>Mathematics</td><td id="v-m">-</td><td>-</td></tr>
+                <tr><td>English Language</td><td id="v-e">-</td><td>-</td></tr>
             </table>
         </div>
 
-        <div id="s-profile" class="screen card">
-            <h3>Update Passport Photograph</h3>
-            <img src="" id="p-preview" class="profile-img">
-            <input type="file" id="file-input" accept="image/*" onchange="previewImage()">
-            <button class="btn btn-main" onclick="uploadPassport()">Save Passport Photo</button>
+        <div id="s-settings" class="screen card">
+            <h2>Account Settings</h2>
+            <div style="background:#f9f9f9; padding:15px; border-radius:8px;">
+                <h4>Update Passport Photograph</h4>
+                <input type="file" id="file-input" accept="image/*" onchange="previewImg()">
+                <button class="btn btn-main" onclick="uploadPic()">Save New Photo</button>
+            </div>
+            <hr style="margin:25px 0;">
+            <div style="background:#f9f9f9; padding:15px; border-radius:8px;">
+                <h4>Security: Change Password</h4>
+                <input type="password" id="new-p1" placeholder="Enter New Password">
+                <input type="password" id="new-p2" placeholder="Confirm New Password">
+                <button class="btn btn-main" style="background:var(--navy)" onclick="changePass()">Update Password</button>
+            </div>
         </div>
 
         <div id="s-fees" class="screen card">
-            <h3>Fee Management</h3>
-            <p>Outstanding: <strong id="v-fee">₦0.00</strong></p>
-            <div id="v-stat" style="padding:10px; border-radius:5px; font-weight:bold;"></div><br>
-            <button class="btn btn-main" style="background:var(--gold); color:black;" id="pay-btn" onclick="pay()">Pay via Flutterwave</button>
+            <h2>Financial Overview</h2>
+            <div style="padding:20px; background:#f0f0f0; border-radius:10px;">
+                <p>Tuition Balance: <strong id="v-fee">₦0.00</strong></p>
+                <span id="v-stat" style="padding:5px 15px; border-radius:20px; color:white; font-size:12px;"></span>
+            </div>
+            <br>
+            <button class="btn btn-gold" id="pay-btn" onclick="payNow()">Pay Fees via Flutterwave</button>
         </div>
+
+        <div id="s-idcard" class="screen card" style="text-align:center;">
+             <div style="border:2px solid #333; width:300px; margin:auto; padding:15px; border-radius:10px; background:white;">
+                 <h4 style="margin:0; background:var(--primary); color:white; padding:5px;">STUDENT ID CARD</h4>
+                 <img src="" id="id-img" style="width:100px; height:100px; margin-top:10px; border:1px solid #ddd;">
+                 <h3 id="id-name" style="margin:10px 0 0 0;">Name</h3>
+                 <p id="id-id" style="margin:0; color:gray;">ID: 000</p>
+                 <hr>
+                 <p style="font-size:10px;">Valid for 2025/2026 Academic Session</p>
+             </div>
+             <p style="font-size:12px; margin-top:10px;">Note: You can screenshot this to use at the school gate.</p>
+        </div>
+
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('GAIC_DB')) || [];
-    let user = null;
+    let db = JSON.parse(localStorage.getItem('GAIC_PRO_DB')) || [];
+    let cur = null;
     let tempImg = "";
-    let resultUnlocked = false;
-
-    // --- YOUR PROFIT LINK (Replace with your link from ShrinkMe.io or AdFly) ---
-    const AD_LINK = "https://shrinkme.io/your_id"; 
+    
+    const AD_LINK = "https://shrinkme.io/your_id"; // Replace this with your profit link
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
         document.getElementById(id).classList.add('active-screen');
     }
 
-    function unlockProfit() {
-        window.open(AD_LINK, '_blank');
-        resultUnlocked = true;
-        alert("Verification Success! You can now check your results.");
-        showScreen('s-results');
-        document.getElementById('res-table').style.display = 'table';
-        document.getElementById('result-locked-msg').style.display = 'none';
-    }
-
     function adminGate() {
-        if(prompt("Staff Key:") === "777") {
+        if(prompt("Staff Admin Key:") === "777") {
             const sel = document.getElementById('adm-sel');
             sel.innerHTML = db.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
             showScreen('admin-screen');
@@ -168,80 +199,95 @@
     function enroll() {
         const name = document.getElementById('r-name').value;
         const id = document.getElementById('r-id').value;
-        if(!name || !id) return alert("Fill all fields");
-        
+        if(!name || !id) return alert("Error: Fill Name and ID");
         db.push({
-            name: name, id: id,
-            pass: document.getElementById('r-pass').value,
+            name, id, pass: document.getElementById('r-pass').value,
             fee: document.getElementById('r-class').value,
             paid: false, img: "", math: "-", eng: "-"
         });
-        localStorage.setItem('GAIC_DB', JSON.stringify(db));
-        alert("Student Saved!");
-        adminGate(); // Refresh list
+        localStorage.setItem('GAIC_PRO_DB', JSON.stringify(db));
+        alert("Success: Student Registered!");
+        adminGate();
     }
 
     function saveRes() {
         let s = db.find(x => x.id === document.getElementById('adm-sel').value);
         s.math = document.getElementById('adm-m').value;
         s.eng = document.getElementById('adm-e').value;
-        localStorage.setItem('GAIC_DB', JSON.stringify(db));
-        alert("Result Uploaded to " + s.name);
+        localStorage.setItem('GAIC_PRO_DB', JSON.stringify(db));
+        alert("Scores Saved for " + s.name);
     }
 
     function doLogin() {
-        user = db.find(x => x.id === document.getElementById('l-id').value && x.pass === document.getElementById('l-pass').value);
-        if(user) {
+        cur = db.find(x => x.id === document.getElementById('l-id').value && x.pass === document.getElementById('l-pass').value);
+        if(cur) {
             document.getElementById('sidebar').style.display = 'flex';
-            document.getElementById('user-display').innerText = user.name;
-            refreshData();
+            document.getElementById('user-tag').innerText = "Logged in: " + cur.name;
+            refreshUI();
             showScreen('s-home');
-        } else { alert("Wrong Admission ID or Password"); }
+        } else { alert("Login Failed: Access Denied"); }
     }
 
-    function refreshData() {
-        document.getElementById('h-name').innerText = user.name;
-        document.getElementById('h-id').innerText = "ID: " + user.id;
-        document.getElementById('h-img').src = user.img || "https://via.placeholder.com/120";
-        document.getElementById('p-preview').src = user.img || "https://via.placeholder.com/120";
-        document.getElementById('v-m').innerText = user.math;
-        document.getElementById('v-e').innerText = user.eng;
-        document.getElementById('v-fee').innerText = "₦" + parseInt(user.fee).toLocaleString();
-        document.getElementById('v-stat').innerText = user.paid ? "PAID ✅" : "UNPAID ❌";
-        document.getElementById('v-stat').style.background = user.paid ? "#d4edda" : "#f8d7da";
-        document.getElementById('pay-btn').style.display = user.paid ? 'none' : 'block';
+    function refreshUI() {
+        document.getElementById('h-name').innerText = cur.name;
+        document.getElementById('h-id').innerText = "Admission ID: " + cur.id;
+        document.getElementById('h-img').src = cur.img || "https://via.placeholder.com/130";
+        document.getElementById('id-img').src = cur.img || "https://via.placeholder.com/130";
+        document.getElementById('id-name').innerText = cur.name;
+        document.getElementById('id-id').innerText = "ID: " + cur.id;
+        document.getElementById('v-m').innerText = cur.math;
+        document.getElementById('v-e').innerText = cur.eng;
+        document.getElementById('v-fee').innerText = "₦" + parseInt(cur.fee).toLocaleString();
+        
+        const st = document.getElementById('v-stat');
+        st.innerText = cur.paid ? "STATUS: FULLY PAID" : "STATUS: PAYMENT PENDING";
+        st.style.background = cur.paid ? "#2e7d32" : "#d32f2f";
+        document.getElementById('pay-btn').style.display = cur.paid ? 'none' : 'block';
     }
 
-    function previewImage() {
+    function previewImg() {
         const file = document.getElementById('file-input').files[0];
         const reader = new FileReader();
-        reader.onloadend = function() {
-            tempImg = reader.result;
-            document.getElementById('p-preview').src = tempImg;
-        }
-        if (file) reader.readAsDataURL(file);
+        reader.onloadend = () => tempImg = reader.result;
+        if(file) reader.readAsDataURL(file);
     }
 
-    function uploadPassport() {
-        if(!tempImg) return alert("Pick a photo!");
-        user.img = tempImg;
-        localStorage.setItem('GAIC_DB', JSON.stringify(db));
-        refreshData();
-        alert("Passport Saved!");
+    function uploadPic() {
+        if(!tempImg) return alert("Please select a file first");
+        cur.img = tempImg;
+        localStorage.setItem('GAIC_PRO_DB', JSON.stringify(db));
+        refreshUI();
+        alert("Passport Uploaded Successfully!");
     }
 
-    function pay() {
+    function changePass() {
+        const p1 = document.getElementById('new-p1').value;
+        const p2 = document.getElementById('new-p2').value;
+        if(p1 !== p2) return alert("Passwords do not match!");
+        cur.pass = p1;
+        localStorage.setItem('GAIC_PRO_DB', JSON.stringify(db));
+        alert("Security Updated: Password Changed.");
+    }
+
+    function unlockAds() {
+        window.open(AD_LINK, '_blank');
+        document.getElementById('res-table').style.display = 'table';
+        document.getElementById('lock-msg').style.display = 'none';
+        alert("Results Unlocked!");
+    }
+
+    function payNow() {
         FlutterwaveCheckout({
             public_key: "FLWPUBK_TEST-YOUR-KEY",
             tx_ref: "GAIC-"+Date.now(),
-            amount: user.fee,
+            amount: cur.fee,
             currency: "NGN",
-            callback: function(data) {
+            callback: (data) => {
                 if(data.status === "successful") {
-                    user.paid = true;
-                    localStorage.setItem('GAIC_DB', JSON.stringify(db));
-                    refreshData();
-                    alert("Payment Success!");
+                    cur.paid = true;
+                    localStorage.setItem('GAIC_PRO_DB', JSON.stringify(db));
+                    refreshUI();
+                    alert("Fees Confirmed!");
                 }
             }
         });
