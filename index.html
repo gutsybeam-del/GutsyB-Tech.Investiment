@@ -3,265 +3,244 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal | Great Achiever International College</title>
+    <title>Great Achiever Portal | Premium</title>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <style>
-        :root { --primary: #800000; --secondary: #001f3f; --accent: #daa520; --light: #f8f9fa; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--light); margin: 0; padding-bottom: 50px; }
+        :root { --primary: #800000; --navy: #001f3f; --gold: #daa520; --bg: #f0f2f5; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; }
         
-        /* Layout */
-        header { background: var(--primary); color: white; padding: 30px; text-align: center; border-bottom: 5px solid var(--accent); }
-        nav { background: var(--secondary); padding: 10px; display: flex; justify-content: center; gap: 20px; }
-        nav a { color: white; text-decoration: none; font-weight: bold; cursor: pointer; }
-        .container { max-width: 1100px; margin: 20px auto; padding: 0 20px; }
-        .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; border-top: 5px solid var(--primary); }
-        .screen { display: none; }
-        .active { display: block; }
+        /* Top Navigation Bar */
+        .top-nav { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--gold); }
+        .logo-area { font-weight: 800; font-size: 20px; }
 
-        /* Forms */
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        .btn { padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        .btn-main { background: var(--primary); color: white; }
-        .btn-admin { background: var(--secondary); color: white; }
+        /* Main Layout */
+        .main-wrapper { display: flex; flex: 1; overflow: hidden; }
+
+        /* Sidebar Menu */
+        .sidebar { width: 250px; background: var(--navy); color: white; display: flex; flex-direction: column; padding: 20px 0; }
+        .sidebar a { padding: 15px 25px; color: #cbd5e1; text-decoration: none; display: block; cursor: pointer; border-left: 4px solid transparent; }
+        .sidebar a:hover, .sidebar a.active-link { background: #1e293b; color: white; border-left-color: var(--gold); }
+
+        /* Content Area */
+        .content { flex: 1; padding: 30px; overflow-y: auto; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .screen { display: none; }
+        .active-screen { display: block; animation: fadeIn 0.3s ease; }
+
+        /* Profile Section */
+        .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; margin-bottom: 15px; }
         
-        /* Tables */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; font-size: 14px; }
-        th { background: #eee; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; }
-        .paid { background: #d4edda; color: #155724; }
+        /* Forms & Buttons */
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
+        .btn-pay { background: var(--gold); color: black; }
+        .btn-save { background: var(--primary); color: white; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @media (max-width: 768px) { .sidebar { display: none; } .main-wrapper { flex-direction: column; } }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Great Achiever International College</h1>
-    <p>Student Management Information System</p>
-</header>
-
-<nav>
-    <a onclick="showScreen('student-login')">Student Login</a>
-    <a onclick="showScreen('admin-login')">Admin Portal</a>
-</nav>
-
-<div class="container">
-
-    <div id="student-login" class="screen active card">
-        <h2>Student Access</h2>
-        <input type="text" id="login-id" placeholder="Admission Number">
-        <input type="password" id="login-pass" placeholder="Password">
-        <button class="btn btn-main" onclick="handleStudentLogin()">Login</button>
+    <div class="top-nav">
+        <div class="logo-area">GREAT ACHIEVER PORTAL</div>
+        <div id="user-tag" style="font-size: 14px;">Guest</div>
     </div>
 
-    <div id="admin-login" class="screen card">
-        <h2>Admin Login</h2>
-        <input type="password" id="admin-key" placeholder="Enter Master Key">
-        <button class="btn btn-admin" onclick="handleAdminLogin()">Verify Staff</button>
-    </div>
+    <div class="main-wrapper">
+        <div class="sidebar" id="main-sidebar" style="display: none;">
+            <a onclick="showScreen('s-home')" id="link-home">🏠 Home Dashboard</a>
+            <a onclick="showScreen('s-results')" id="link-results">📊 View Results</a>
+            <a onclick="showScreen('s-fees')" id="link-fees">💳 School Fees</a>
+            <a onclick="showScreen('s-profile')" id="link-profile">👤 My Profile</a>
+            <a onclick="logout()" style="color: #ff4444; margin-top: auto;">Logout</a>
+        </div>
 
-    <div id="admin-panel" class="screen">
-        <div class="card">
-            <h3>1. Enroll New Student</h3>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                <input type="text" id="reg-name" placeholder="Full Name">
-                <input type="text" id="reg-id" placeholder="Admission Number">
-                <select id="reg-class">
-                    <option value="JSS">Junior Secondary (₦50k)</option>
-                    <option value="SSS_SCIENCE">Senior Science (₦80k)</option>
-                    <option value="SSS_ART">Senior Art/Comm (₦70k)</option>
-                </select>
-                <input type="text" id="reg-pass" placeholder="Set Default Password" value="1234">
+        <div class="content">
+            <div id="login-screen" class="screen active-screen card" style="max-width: 400px; margin: 50px auto;">
+                <h2 style="text-align: center; color: var(--primary);">Login</h2>
+                <input type="text" id="login-id" placeholder="Admission Number">
+                <input type="password" id="login-pass" placeholder="Password">
+                <button class="btn btn-save" onclick="handleLogin()">Login to Portal</button>
+                <p style="text-align: center; margin-top: 20px; font-size: 13px; color: #666;" onclick="showAdminLogin()">Staff Access Only</p>
             </div>
-            <button class="btn btn-main" onclick="registerStudent()">Register Student</button>
-        </div>
 
-        <div class="card">
-            <h3>2. Input Academic Results</h3>
-            <select id="res-student-select"><option>Select Student</option></select>
-            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:10px;">
-                <input type="number" id="res-math" placeholder="Math Score">
-                <input type="number" id="res-eng" placeholder="English Score">
-                <input type="number" id="res-sci" placeholder="Science Score">
+            <div id="admin-screen" class="screen card">
+                <h2>Admin Management</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <h3>Enroll Student</h3>
+                        <input type="text" id="reg-name" placeholder="Full Name">
+                        <input type="text" id="reg-id" placeholder="Admission ID">
+                        <input type="text" id="reg-pass" placeholder="Password" value="1234">
+                        <button class="btn btn-save" onclick="register()">Register Student</button>
+                    </div>
+                    <div>
+                        <h3>Upload Results</h3>
+                        <select id="res-select"><option>Select Student</option></select>
+                        <input type="number" id="res-math" placeholder="Maths Score">
+                        <input type="number" id="res-eng" placeholder="English Score">
+                        <button class="btn btn-save" onclick="saveResult()">Save Scores</button>
+                    </div>
+                </div>
+                <hr>
+                <div id="admin-list"></div>
             </div>
-            <button class="btn btn-admin" onclick="uploadResult()">Upload Result</button>
-        </div>
 
-        <div class="card" style="overflow-x:auto;">
-            <h3>3. Student Directory</h3>
-            <table id="admin-table">
-                <thead><tr><th>Name</th><th>ID</th><th>Password</th><th>Fees</th><th>Result</th></tr></thead>
-                <tbody id="admin-list"></tbody>
-            </table>
-            <button class="btn" style="background:#dc3545; color:white; width:auto;" onclick="clearAllData()">Clear All Records (Reset)</button>
+            <div id="s-home" class="screen">
+                <div class="card" style="display: flex; align-items: center; gap: 20px; background: linear-gradient(to right, var(--navy), #1e293b); color: white;">
+                    <img src="https://via.placeholder.com/100" class="profile-img" id="display-img">
+                    <div>
+                        <h2 id="display-name">...</h2>
+                        <p id="display-class">Admission No: ...</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>School Announcements</h3>
+                    <p>📢 First Term exams begin on the 15th of Jan. Ensure all fees are cleared.</p>
+                </div>
+            </div>
+
+            <div id="s-results" class="screen card">
+                <h3>Academic Report Card</h3>
+                <table width="100%" border="1" cellpadding="10" style="border-collapse: collapse;">
+                    <tr style="background: #f8f9fa;"><th>Subject</th><th>Score</th><th>Grade</th></tr>
+                    <tr><td>Mathematics</td><td id="m-score">-</td><td id="m-grade">-</td></tr>
+                    <tr><td>English Language</td><td id="e-score">-</td><td id="e-grade">-</td></tr>
+                </table>
+            </div>
+
+            <div id="s-fees" class="screen card">
+                <h3>Financial Status</h3>
+                <p>Tuition Balance: <strong id="fee-bal">₦0.00</strong></p>
+                <div id="fee-badge" style="padding: 10px; display: inline-block; border-radius: 5px;"></div><br><br>
+                <button class="btn btn-pay" id="pay-btn" onclick="payNow()">Pay with Flutterwave</button>
+            </div>
+
+            <div id="s-profile" class="screen card">
+                <h3>Security & Profile</h3>
+                <label>Change Profile Picture (URL)</label>
+                <input type="text" id="new-img" placeholder="Paste image link here">
+                <button class="btn btn-save" onclick="updateProfile()">Update Picture</button>
+                <hr>
+                <label>Update Password</label>
+                <input type="password" id="new-pass" placeholder="New Secret Password">
+                <button class="btn btn-save" onclick="changePass()">Change Password</button>
+            </div>
         </div>
     </div>
 
-    <div id="student-dash" class="screen">
-        <div class="card" style="background:var(--secondary); color:white;">
-            <h2 id="s-welcome">Welcome</h2>
-            <p>Admission No: <span id="s-id"></span></p>
-        </div>
+    <script>
+        let students = JSON.parse(localStorage.getItem('GAIC_DATA')) || [];
+        let loggedUser = null;
 
-        <div class="card">
-            <h3>Change Password</h3>
-            <input type="password" id="new-pass" placeholder="Enter New Password">
-            <button class="btn btn-admin" onclick="changePassword()">Update Password</button>
-        </div>
-
-        <div class="card">
-            <h3>Academic Report Card</h3>
-            <table>
-                <tr><th>Subject</th><th>Score</th><th>Grade</th></tr>
-                <tr><td>Mathematics</td><td id="s-math">-</td><td id="g-math">-</td></tr>
-                <tr><td>English</td><td id="s-eng">-</td><td id="g-eng">-</td></tr>
-                <tr><td>Basic Science</td><td id="s-sci">-</td><td id="g-sci">-</td></tr>
-            </table>
-        </div>
-
-        <div class="card">
-            <h3>Fee Status: <span id="s-fee-status">Pending</span></h3>
-            <button class="btn btn-main" id="pay-btn" onclick="payFees()">Pay Now (₦<span id="s-amt"></span>)</button>
-        </div>
-    </div>
-</div>
-
-<script>
-    // --- PERSISTENT DATA LOGIC ---
-    let students = JSON.parse(localStorage.getItem('GAIC_STUDENTS')) || [];
-    let currentStudent = null;
-
-    function saveToStorage() {
-        localStorage.setItem('GAIC_STUDENTS', JSON.stringify(students));
-    }
-
-    function showScreen(id) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-    }
-
-    // --- ADMIN ACTIONS ---
-    function handleAdminLogin() {
-        if(document.getElementById('admin-key').value === "admin777") {
-            updateAdminUI();
-            showScreen('admin-panel');
-        } else { alert("Wrong Access Key!"); }
-    }
-
-    function registerStudent() {
-        const name = document.getElementById('reg-name').value;
-        const id = document.getElementById('reg-id').value;
-        const cls = document.getElementById('reg-class').value;
-        const pass = document.getElementById('reg-pass').value;
-
-        if(!name || !id) return alert("Fill all fields");
-        
-        let fee = (cls === 'JSS') ? 50000 : (cls === 'SSS_SCIENCE' ? 80000 : 70000);
-        
-        const student = { 
-            name, id, cls, pass, fee, 
-            paid: false, 
-            results: { math: '-', eng: '-', sci: '-' } 
-        };
-        
-        students.push(student);
-        saveToStorage();
-        updateAdminUI();
-        alert("Registered!");
-    }
-
-    function uploadResult() {
-        const id = document.getElementById('res-student-select').value;
-        const student = students.find(s => s.id === id);
-        if(!student) return alert("Select student first");
-
-        student.results.math = document.getElementById('res-math').value || '-';
-        student.results.eng = document.getElementById('res-eng').value || '-';
-        student.results.sci = document.getElementById('res-sci').value || '-';
-
-        saveToStorage();
-        updateAdminUI();
-        alert("Results Uploaded!");
-    }
-
-    function updateAdminUI() {
-        const list = document.getElementById('admin-list');
-        const select = document.getElementById('res-student-select');
-        list.innerHTML = "";
-        select.innerHTML = "<option>Select Student</option>";
-
-        students.forEach(s => {
-            list.innerHTML += `<tr>
-                <td>${s.name}</td>
-                <td>${s.id}</td>
-                <td>${s.pass}</td>
-                <td><span class="badge ${s.paid ? 'paid' : ''}">${s.paid ? 'PAID' : 'OWING'}</span></td>
-                <td>M:${s.results.math} E:${s.results.eng}</td>
-            </tr>`;
-            select.innerHTML += `<option value="${s.id}">${s.name} (${s.id})</option>`;
-        });
-    }
-
-    // --- STUDENT ACTIONS ---
-    function handleStudentLogin() {
-        const id = document.getElementById('login-id').value;
-        const pass = document.getElementById('login-pass').value;
-        const found = students.find(s => s.id === id && s.pass === pass);
-
-        if(found) {
-            currentStudent = found;
-            loadStudentDash();
-            showScreen('student-dash');
-        } else { alert("Invalid Credentials!"); }
-    }
-
-    function loadStudentDash() {
-        document.getElementById('s-welcome').innerText = "Welcome, " + currentStudent.name;
-        document.getElementById('s-id').innerText = currentStudent.id;
-        document.getElementById('s-amt').innerText = currentStudent.fee.toLocaleString();
-        
-        // Results
-        document.getElementById('s-math').innerText = currentStudent.results.math;
-        document.getElementById('s-eng').innerText = currentStudent.results.eng;
-        document.getElementById('s-sci').innerText = currentStudent.results.sci;
-
-        if(currentStudent.paid) {
-            document.getElementById('s-fee-status').innerText = "PAID ✅";
-            document.getElementById('pay-btn').style.display = "none";
-        }
-    }
-
-    function changePassword() {
-        const newPass = document.getElementById('new-pass').value;
-        if(newPass.length < 4) return alert("Password too short");
-        currentStudent.pass = newPass;
-        saveToStorage();
-        alert("Password Changed Successfully!");
-    }
-
-    function clearAllData() {
-        if(confirm("Erase all students?")) {
-            localStorage.removeItem('GAIC_STUDENTS');
-            location.reload();
-        }
-    }
-
-    function payFees() {
-        FlutterwaveCheckout({
-            public_key: "FLWPUBK_TEST-YOUR-KEY-HERE",
-            tx_ref: "GAIC-" + Date.now(),
-            amount: currentStudent.fee,
-            currency: "NGN",
-            customer: { email: "student@school.com", name: currentStudent.name },
-            callback: function (data) {
-                if (data.status === "successful") {
-                    currentStudent.paid = true;
-                    saveToStorage();
-                    loadStudentDash();
-                    alert("Payment Successful!");
-                }
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+            document.getElementById(id).classList.add('active-screen');
+            // Update link styling
+            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active-link'));
+            if(document.getElementById('link-' + id.split('-')[1])) {
+                document.getElementById('link-' + id.split('-')[1]).classList.add('active-link');
             }
-        });
-    }
-</script>
+        }
+
+        function handleLogin() {
+            const id = document.getElementById('login-id').value;
+            const pass = document.getElementById('login-pass').value;
+            const user = students.find(s => s.id === id && s.pass === pass);
+
+            if(user) {
+                loggedUser = user;
+                document.getElementById('main-sidebar').style.display = 'flex';
+                document.getElementById('user-tag').innerText = user.name;
+                loadStudentData();
+                showScreen('s-home');
+            } else { alert("Invalid Credentials"); }
+        }
+
+        function loadStudentData() {
+            document.getElementById('display-name').innerText = loggedUser.name;
+            document.getElementById('display-class').innerText = "ID: " + loggedUser.id;
+            document.getElementById('display-img').src = loggedUser.pic || "https://via.placeholder.com/100";
+            document.getElementById('m-score').innerText = loggedUser.math || '-';
+            document.getElementById('e-score').innerText = loggedUser.eng || '-';
+            document.getElementById('fee-bal').innerText = "₦" + (loggedUser.paid ? "0.00" : "50,000");
+            
+            const badge = document.getElementById('fee-badge');
+            badge.innerText = loggedUser.paid ? "PAID" : "UNPAID";
+            badge.style.background = loggedUser.paid ? "#d4edda" : "#f8d7da";
+            document.getElementById('pay-btn').style.display = loggedUser.paid ? 'none' : 'block';
+        }
+
+        function updateProfile() {
+            loggedUser.pic = document.getElementById('new-img').value;
+            localStorage.setItem('GAIC_DATA', JSON.stringify(students));
+            loadStudentData();
+            alert("Profile Picture Updated!");
+        }
+
+        function changePass() {
+            loggedUser.pass = document.getElementById('new-pass').value;
+            localStorage.setItem('GAIC_DATA', JSON.stringify(students));
+            alert("Password Changed!");
+        }
+
+        function logout() { location.reload(); }
+
+        // --- ADMIN FUNCTIONS ---
+        function showAdminLogin() { 
+            const p = prompt("Enter Admin Key:");
+            if(p === "777") {
+                updateAdminList();
+                showScreen('admin-screen');
+                document.getElementById('main-sidebar').style.display = 'none';
+            }
+        }
+
+        function register() {
+            const name = document.getElementById('reg-name').value;
+            const id = document.getElementById('reg-id').value;
+            const pass = document.getElementById('reg-pass').value;
+            students.push({ name, id, pass, paid: false, math: '-', eng: '-', pic: '' });
+            localStorage.setItem('GAIC_DATA', JSON.stringify(students));
+            updateAdminList();
+            alert("Registered!");
+        }
+
+        function updateAdminList() {
+            const sel = document.getElementById('res-select');
+            sel.innerHTML = "<option>Select Student</option>";
+            students.forEach(s => {
+                sel.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+            });
+        }
+
+        function saveResult() {
+            const id = document.getElementById('res-select').value;
+            const user = students.find(s => s.id === id);
+            user.math = document.getElementById('res-math').value;
+            user.eng = document.getElementById('res-eng').value;
+            localStorage.setItem('GAIC_DATA', JSON.stringify(students));
+            alert("Results Saved!");
+        }
+
+        function payNow() {
+            FlutterwaveCheckout({
+                public_key: "FLWPUBK_TEST-YOUR-KEY",
+                tx_ref: "GAIC-" + Date.now(),
+                amount: 50000,
+                currency: "NGN",
+                customer: { email: "student@school.com", name: loggedUser.name },
+                callback: function (data) {
+                    if (data.status === "successful") {
+                        loggedUser.paid = true;
+                        localStorage.setItem('GAIC_DATA', JSON.stringify(students));
+                        loadStudentData();
+                        alert("Fees Paid Successfully!");
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
