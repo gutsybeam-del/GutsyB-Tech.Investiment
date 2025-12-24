@@ -3,140 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Naira Earnings Hub</title>
+    <title>SmartSchool Portal | Nigeria</title>
+    <script src="https://checkout.flutterwave.com/v3.js"></script>
     <style>
-        :root { --primary: #00d1b2; --dark: #0f172a; --card: #1e293b; --gold: #f59e0b; }
-        body { font-family: 'Inter', sans-serif; background: var(--dark); color: white; margin: 0; padding-bottom: 50px; }
+        :root { --blue: #1e3a8a; --gold: #f59e0b; --light: #f3f4f6; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; color: #333; }
         
         /* Header */
-        nav { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); sticky: top; }
-        .balance-pill { background: #000; padding: 8px 15px; border-radius: 2000px; border: 1px solid var(--gold); font-weight: bold; color: var(--gold); }
+        header { background: var(--blue); color: white; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .nav-tabs { display: flex; background: white; justify-content: space-around; padding: 10px; border-bottom: 2px solid var(--gold); }
+        .tab { cursor: pointer; font-weight: bold; color: var(--blue); padding: 10px; }
 
-        /* Screens */
-        .screen { display: none; padding: 20px; text-align: center; }
-        .active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Portal Containers */
+        .container { max-width: 900px; margin: 20px auto; padding: 20px; }
+        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .screen { display: none; }
+        .active { display: block; }
 
-        /* Task Cards */
-        .card { background: var(--card); border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        .task-amt { color: var(--primary); font-size: 22px; font-weight: bold; display: block; margin: 10px 0; }
+        /* Tables & UI */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f8fafc; }
+        .btn { background: var(--blue); color: white; border: none; padding: 12px 25px; border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
+        .btn:hover { background: #1e40af; }
+        .btn-pay { background: #059669; }
         
-        /* Buttons */
-        .btn { background: var(--primary); color: #000; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
-        .btn:disabled { background: #4b5563; cursor: not-allowed; }
-        .btn-withdraw { background: #ef4444; color: white; }
-
-        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #334155; color: white; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .paid { background: #dcfce7; color: #166534; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div style="font-weight: bold;">TASK-EARN ₦</div>
-        <div class="balance-pill">₦<span id="nav-bal">0</span></div>
-    </nav>
+<header>
+    <h1>SMARTSCHOOL INTERNATIONAL</h1>
+    <p>Student Management & Result Portal</p>
+</header>
 
-    <div id="login-screen" class="screen active">
-        <h2 style="margin-top: 40px;">Welcome to the Hub</h2>
-        <p>Register to get your ₦200 Welcome Bonus</p>
+<div class="nav-tabs">
+    <div class="tab" onclick="showScreen('login-screen')">Logout</div>
+    <div class="tab" onclick="showScreen('student-dash')">Student Dashboard</div>
+    <div class="tab" onclick="showScreen('admin-dash')">Admin Office</div>
+</div>
+
+<div class="container">
+
+    <div id="login-screen" class="screen active card">
+        <h2>Portal Login</h2>
+        <input type="text" id="regNo" placeholder="Registration Number (e.g. 2024/001)">
+        <input type="password" placeholder="Password">
+        <button class="btn" onclick="showScreen('student-dash')">Login as Student</button>
+        <p style="text-align:center; margin-top:15px; font-size:14px; color:blue; cursor:pointer;" onclick="showScreen('admin-dash')">Staff Login Area</p>
+    </div>
+
+    <div id="student-dash" class="screen">
         <div class="card">
-            <input type="text" placeholder="Username">
-            <input type="password" placeholder="Password">
-            <button class="btn" onclick="registerUser()">Register & Claim ₦200</button>
+            <h3>Welcome, <span id="std-name">Adebayo Samuel</span></h3>
+            <p>Class: SS3 Gold | Term: First Term</p>
+        </div>
+
+        <div class="card">
+            <h3>💳 School Fees Status</h3>
+            <p>Outstanding Balance: <strong style="color:red">₦45,000</strong></p>
+            <button class="btn btn-pay" onclick="payFees()">Pay Online Now (Flutterwave)</button>
+        </div>
+
+        <div class="card">
+            <h3>📊 Academic Result</h3>
+            <table>
+                <tr><th>Subject</th><th>CA (40)</th><th>Exam (60)</th><th>Total</th></tr>
+                <tr><td>Mathematics</td><td>35</td><td>52</td><td>87 (A)</td></tr>
+                <tr><td>English</td><td>30</td><td>45</td><td>75 (B)</td></tr>
+                <tr><td>Physics</td><td>28</td><td>40</td><td>68 (B)</td></tr>
+            </table>
+            <button class="btn" style="margin-top:15px; background:#64748b;" onclick="window.print()">Print Result</button>
         </div>
     </div>
 
-    <div id="dash-screen" class="screen">
-        <h3>Welcome Player</h3>
-        <div class="card" style="background: linear-gradient(45deg, #1e293b, #334155);">
-            <span>Total Earnings</span>
-            <div style="font-size: 32px; font-weight: bold; color: var(--gold);">₦<span id="main-bal">0</span></div>
-        </div>
-
-        <h3>Tasks for Today</h3>
+    <div id="admin-dash" class="screen">
+        <h2>Admin Command Center</h2>
         
         <div class="card">
-            <strong>Daily Task #1</strong>
-            <p>Perform this simple task to earn money.</p>
-            <span class="task-amt">+ ₦129</span>
-            <button class="btn" id="task1-btn" onclick="completeTask(129, 'task1-btn')">Start Task (₦129)</button>
+            <h3>Upload Student Result</h3>
+            <input type="text" placeholder="Student Reg No">
+            <select>
+                <option>Mathematics</option>
+                <option>English Language</option>
+                <option>Biology</option>
+            </select>
+            <input type="number" placeholder="CA Score">
+            <input type="number" placeholder="Exam Score">
+            <button class="btn">Upload Record</button>
         </div>
 
         <div class="card">
-            <strong>Video Bonus</strong>
-            <p>Watch a short clip to earn extra.</p>
-            <span class="task-amt">+ ₦2000</span>
-            <button class="btn" onclick="completeTask(50)">Watch Video</button>
-        </div>
-
-        <div style="margin-top: 30px;">
-            <button class="btn btn-withdraw" onclick="showWithdraw()">Request Withdrawal</button>
+            <h3>Manage Payments</h3>
+            <table>
+                <tr><th>Student</th><th>Amount</th><th>Status</th></tr>
+                <tr><td>John Okafor</td><td>₦55,000</td><td><span class="badge paid">PAID</span></td></tr>
+                <tr><td>Musa Ibrahim</td><td>₦45,000</td><td><span style="color:red">PENDING</span></td></tr>
+            </table>
         </div>
     </div>
 
-    <div id="withdraw-screen" class="screen">
-        <h2>Withdraw Funds</h2>
-        <p>Min Withdrawal: ₦5,000</p>
-        <div class="card">
-            <input type="number" id="w-amount" placeholder="Amount to Withdraw">
-            <input type="text" placeholder="Bank Account Number">
-            <button class="btn" onclick="handleWithdraw()">Process Withdrawal</button>
-            <button class="btn" style="background:none; color:white; border: 1px solid white;" onclick="goHome()">Back to Dashboard</button>
-        </div>
-    </div>
+</div>
 
-    <script>
-        let balance = 0;
+<script>
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo(0,0);
+    }
 
-        function updateDisplay() {
-            document.getElementById('nav-bal').innerText = balance.toLocaleString();
-            document.getElementById('main-bal').innerText = balance.toLocaleString();
-        }
+    function payFees() {
+        FlutterwaveCheckout({
+            public_key: "FLWPUBK_TEST-YOUR-KEY-HERE", // Change to your key
+            tx_ref: "SCH-" + Date.now(),
+            amount: 45000,
+            currency: "NGN",
+            payment_options: "card, banktransfer, ussd",
+            customer: {
+                email: "student@school.com",
+                name: "Adebayo Samuel",
+            },
+            callback: function (data) {
+                if (data.status === "successful") {
+                    alert("Fees Payment Successful! Your portal has been updated.");
+                }
+            },
+            customizations: {
+                title: "SmartSchool Fees",
+                description: "First Term Tuition Payment",
+            },
+        });
+    }
+</script>
 
-        function registerUser() {
-            // Give 200 Naira Login Bonus
-            balance = 200;
-            updateDisplay();
-            alert("Success! ₦200 Welcome Bonus has been added to your wallet.");
-            showScreen('dash-screen');
-        }
-
-        function completeTask(amount, btnId) {
-            balance += amount;
-            updateDisplay();
-            alert("Congratulations! You earned ₦" + amount);
-            if(btnId) {
-                document.getElementById(btnId).disabled = true;
-                document.getElementById(btnId).innerText = "Completed ✅";
-            }
-        }
-
-        function handleWithdraw() {
-            let amt = document.getElementById('w-amount').value;
-            if (balance < 5000) {
-                alert("Error: You must have at least ₦5,000 to withdraw.");
-            } else if (amt > balance) {
-                alert("Insufficient funds!");
-            } else if (amt < 5000) {
-                alert("Minimum withdrawal is ₦5,000");
-            } else {
-                alert("Request Submitted! ₦" + amt + " will be sent to your bank.");
-                balance -= amt;
-                updateDisplay();
-                goHome();
-            }
-        }
-
-        function showScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-        }
-
-        function showWithdraw() { showScreen('withdraw-screen'); }
-        function goHome() { showScreen('dash-screen'); }
-
-    </script>
 </body>
 </html>
-
-
