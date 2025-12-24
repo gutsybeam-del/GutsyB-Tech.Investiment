@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Great Achiever Portal | Premium</title>
+    <title>Great Achiever Portal | Premium + Earnings</title>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <style>
         :root { --primary: #800000; --navy: #001f3f; --gold: #daa520; --bg: #f0f2f5; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; display: flex; flex-direction: column; height: 100vh; }
         
-        /* Top Navigation Bar */
+        /* Top Navigation */
         .top-nav { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--gold); }
         .logo-area { font-weight: 800; font-size: 20px; }
 
-        /* Main Layout */
+        /* Sidebar */
         .main-wrapper { display: flex; flex: 1; overflow: hidden; }
-
-        /* Sidebar Menu */
         .sidebar { width: 250px; background: var(--navy); color: white; display: flex; flex-direction: column; padding: 20px 0; }
         .sidebar a { padding: 15px 25px; color: #cbd5e1; text-decoration: none; display: block; cursor: pointer; border-left: 4px solid transparent; }
         .sidebar a:hover, .sidebar a.active-link { background: #1e293b; color: white; border-left-color: var(--gold); }
@@ -27,17 +25,16 @@
         .screen { display: none; }
         .active-screen { display: block; animation: fadeIn 0.3s ease; }
 
-        /* Profile Section */
-        .profile-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; margin-bottom: 15px; }
-        
-        /* Forms & Buttons */
+        /* Ad Slot Styling */
+        .ad-banner { background: #eee; border: 1px dashed #999; text-align: center; padding: 10px; margin: 10px 0; border-radius: 8px; font-size: 12px; color: #666; }
+        .sponsored-btn { background: #2563eb; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
+
+        /* Buttons */
         input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
         .btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; }
-        .btn-pay { background: var(--gold); color: black; }
         .btn-save { background: var(--primary); color: white; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @media (max-width: 768px) { .sidebar { display: none; } .main-wrapper { flex-direction: column; } }
     </style>
 </head>
 <body>
@@ -49,10 +46,10 @@
 
     <div class="main-wrapper">
         <div class="sidebar" id="main-sidebar" style="display: none;">
-            <a onclick="showScreen('s-home')" id="link-home">🏠 Home Dashboard</a>
-            <a onclick="showScreen('s-results')" id="link-results">📊 View Results</a>
-            <a onclick="showScreen('s-fees')" id="link-fees">💳 School Fees</a>
-            <a onclick="showScreen('s-profile')" id="link-profile">👤 My Profile</a>
+            <a onclick="showScreen('s-home')">🏠 Home Dashboard</a>
+            <a onclick="showScreen('s-results')">📊 View Results</a>
+            <a onclick="showScreen('s-fees')">💳 School Fees</a>
+            <a onclick="showScreen('s-profile')">👤 My Profile</a>
             <a onclick="logout()" style="color: #ff4444; margin-top: auto;">Logout</a>
         </div>
 
@@ -62,7 +59,12 @@
                 <input type="text" id="login-id" placeholder="Admission Number">
                 <input type="password" id="login-pass" placeholder="Password">
                 <button class="btn btn-save" onclick="handleLogin()">Login to Portal</button>
-                <p style="text-align: center; margin-top: 20px; font-size: 13px; color: #666;" onclick="showAdminLogin()">Staff Access Only</p>
+                
+                <div class="ad-banner">
+                    <p>ADVERTISEMENT</p>
+                    </div>
+                
+                <p style="text-align: center; margin-top: 20px; font-size: 11px; color: #666; cursor: pointer;" onclick="showAdminLogin()">Staff Access Only</p>
             </div>
 
             <div id="admin-screen" class="screen card">
@@ -83,59 +85,39 @@
                         <button class="btn btn-save" onclick="saveResult()">Save Scores</button>
                     </div>
                 </div>
-                <hr>
-                <div id="admin-list"></div>
             </div>
 
             <div id="s-home" class="screen">
-                <div class="card" style="display: flex; align-items: center; gap: 20px; background: linear-gradient(to right, var(--navy), #1e293b); color: white;">
-                    <img src="https://via.placeholder.com/100" class="profile-img" id="display-img">
-                    <div>
-                        <h2 id="display-name">...</h2>
-                        <p id="display-class">Admission No: ...</p>
-                    </div>
+                <div class="card" style="background: linear-gradient(to right, var(--navy), #1e293b); color: white;">
+                    <h2 id="display-name">...</h2>
+                    <p id="display-class">Admission No: ...</p>
                 </div>
+                
                 <div class="card">
-                    <h3>School Announcements</h3>
-                    <p>📢 First Term exams begin on the 15th of Jan. Ensure all fees are cleared.</p>
+                    <h3>💡 Student Bonus Task</h3>
+                    <p>Click the link below to verify your account and support the school. (Earns Admin Profit)</p>
+                    <button class="sponsored-btn" onclick="openSponsoredLink()">Verify Account & Support School</button>
+                </div>
+
+                <div class="card">
+                    <h3>Notice Board</h3>
+                    <p>📢 Check your results in the Results tab. Ensure fees are paid.</p>
                 </div>
             </div>
 
             <div id="s-results" class="screen card">
                 <h3>Academic Report Card</h3>
+                <p style="color:red; font-size: 12px;">*Make sure you have clicked the Verify button on Home page to see full grades.</p>
                 <table width="100%" border="1" cellpadding="10" style="border-collapse: collapse;">
                     <tr style="background: #f8f9fa;"><th>Subject</th><th>Score</th><th>Grade</th></tr>
                     <tr><td>Mathematics</td><td id="m-score">-</td><td id="m-grade">-</td></tr>
                     <tr><td>English Language</td><td id="e-score">-</td><td id="e-grade">-</td></tr>
                 </table>
             </div>
-
-            <div id="s-fees" class="screen card">
-                <h3>Financial Status</h3>
-                <p>Tuition Balance: <strong id="fee-bal">₦0.00</strong></p>
-                <div id="fee-badge" style="padding: 10px; display: inline-block; border-radius: 5px;"></div><br><br>
-                <button class="btn btn-pay" id="pay-btn" onclick="payNow()">Pay with Flutterwave</button>
-            </div>
-
-            <div id="s-profile" class="screen card">
-                <div id="s-profile" class="screen card">
-    <h3>User Profile & Photo</h3>
-    <div style="text-align: center;">
-        <img src="https://via.placeholder.com/100" id="profile-preview" class="profile-img">
-    </div>
-    
-    <label>Student Photo Link (URL)</label>
-    <input type="text" id="new-img" placeholder="Paste image link here (e.g., https://site.com/photo.jpg)">
-    <p style="font-size: 12px; color: #666;">Tip: Upload photo to PostImages.org and paste the 'Direct Link' here.</p>
-    
-    <button class="btn btn-save" onclick="updateProfile()">Save Profile Photo</button>
-    <hr>
-    
-    <label>Change Security Password</label>
-    <input type="password" id="new-pass" placeholder="Enter New Password">
-    <button class="btn btn-save" style="background: var(--navy);" onclick="changePass()">Update Password</button>
-</div>
-            </div>
+            
+            <div class="ad-banner" id="footer-ad" style="display:none;">
+                <p>SPONSORED CONTENT</p>
+                </div>
         </div>
     </div>
 
@@ -143,14 +125,17 @@
         let students = JSON.parse(localStorage.getItem('GAIC_DATA')) || [];
         let loggedUser = null;
 
+        // --- PROFIT SETTINGS ---
+        const SPONSORED_URL = "https://shrinkme.io/st/your_id"; // Replace with your Ad link
+
+        function openSponsoredLink() {
+            window.open(SPONSORED_URL, '_blank');
+            alert("Verification started! You can now check your results.");
+        }
+
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
             document.getElementById(id).classList.add('active-screen');
-            // Update link styling
-            document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active-link'));
-            if(document.getElementById('link-' + id.split('-')[1])) {
-                document.getElementById('link-' + id.split('-')[1]).classList.add('active-link');
-            }
         }
 
         function handleLogin() {
@@ -161,7 +146,7 @@
             if(user) {
                 loggedUser = user;
                 document.getElementById('main-sidebar').style.display = 'flex';
-                document.getElementById('user-tag').innerText = user.name;
+                document.getElementById('footer-ad').style.display = 'block';
                 loadStudentData();
                 showScreen('s-home');
             } else { alert("Invalid Credentials"); }
@@ -170,69 +155,25 @@
         function loadStudentData() {
             document.getElementById('display-name').innerText = loggedUser.name;
             document.getElementById('display-class').innerText = "ID: " + loggedUser.id;
-            document.getElementById('display-img').src = loggedUser.pic || "https://via.placeholder.com/100";
             document.getElementById('m-score').innerText = loggedUser.math || '-';
             document.getElementById('e-score').innerText = loggedUser.eng || '-';
-            document.getElementById('fee-bal').innerText = "₦" + (loggedUser.paid ? "0.00" : "50,000");
-            
-            const badge = document.getElementById('fee-badge');
-            badge.innerText = loggedUser.paid ? "PAID" : "UNPAID";
-            badge.style.background = loggedUser.paid ? "#d4edda" : "#f8d7da";
-            document.getElementById('pay-btn').style.display = loggedUser.paid ? 'none' : 'block';
-        }
-
-        function updateProfile() {
-            function updateProfile() {
-    const imgUrl = document.getElementById('new-img').value;
-    
-    if (imgUrl.includes("http")) {
-        loggedUser.pic = imgUrl; // Update the student's data
-        document.getElementById('display-img').src = imgUrl; // Update dashboard icon
-        document.getElementById('profile-preview').src = imgUrl; // Update preview
-        
-        // Save to permanent memory
-        localStorage.setItem('GAIC_DATA', JSON.stringify(students));
-        alert("Profile picture updated successfully!");
-    } else {
-        alert("Please enter a valid web link (URL) for the image.");
-    }
-}
-        }
-
-        function changePass() {
-            loggedUser.pass = document.getElementById('new-pass').value;
-            localStorage.setItem('GAIC_DATA', JSON.stringify(students));
-            alert("Password Changed!");
         }
 
         function logout() { location.reload(); }
 
-        // --- ADMIN FUNCTIONS ---
+        // --- ADMIN FUNCTIONS (Key: 777) ---
         function showAdminLogin() { 
             const p = prompt("Enter Admin Key:");
-            if(p === "777") {
-                updateAdminList();
-                showScreen('admin-screen');
-                document.getElementById('main-sidebar').style.display = 'none';
-            }
+            if(p === "777") { showScreen('admin-screen'); }
         }
 
         function register() {
             const name = document.getElementById('reg-name').value;
             const id = document.getElementById('reg-id').value;
             const pass = document.getElementById('reg-pass').value;
-            students.push({ name, id, pass, paid: false, math: '-', eng: '-', pic: '' });
+            students.push({ name, id, pass, paid: false, math: '-', eng: '-' });
             localStorage.setItem('GAIC_DATA', JSON.stringify(students));
-            updateAdminList();
             alert("Registered!");
-        }
-
-        function updateAdminList() {
-            const sel = document.getElementById('res-select');
-            sel.innerHTML = "<option>Select Student</option>";
-            students.forEach(s => {
-                sel.innerHTML += `<option value="${s.id}">${s.name}</option>`;
-            });
         }
 
         function saveResult() {
@@ -243,25 +184,6 @@
             localStorage.setItem('GAIC_DATA', JSON.stringify(students));
             alert("Results Saved!");
         }
-
-        function payNow() {
-            FlutterwaveCheckout({
-                public_key: "FLWPUBK_TEST-YOUR-KEY",
-                tx_ref: "GAIC-" + Date.now(),
-                amount: 50000,
-                currency: "NGN",
-                customer: { email: "student@school.com", name: loggedUser.name },
-                callback: function (data) {
-                    if (data.status === "successful") {
-                        loggedUser.paid = true;
-                        localStorage.setItem('GAIC_DATA', JSON.stringify(students));
-                        loadStudentData();
-                        alert("Fees Paid Successfully!");
-                    }
-                }
-            });
-        }
     </script>
 </body>
 </html>
-
