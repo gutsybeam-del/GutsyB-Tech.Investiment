@@ -3,93 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Gaming & Tasks Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Naira Earnings Hub</title>
     <style>
-        :root { --gold: #ffcc00; --dark: #121212; --blue: #007bff; }
-        body { font-family: 'Poppins', sans-serif; background: var(--dark); color: white; margin: 0; }
+        :root { --primary: #00d1b2; --dark: #0f172a; --card: #1e293b; --gold: #f59e0b; }
+        body { font-family: 'Inter', sans-serif; background: var(--dark); color: white; margin: 0; padding-bottom: 50px; }
         
-        /* Header & Wallet */
-        nav { background: #1f1f1f; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--gold); }
-        .logo { font-weight: bold; font-size: 24px; color: var(--gold); }
-        .wallet-btn { background: #333; padding: 5px 15px; border-radius: 20px; border: 1px solid var(--gold); }
+        /* Header */
+        nav { background: var(--card); padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); sticky: top; }
+        .balance-pill { background: #000; padding: 8px 15px; border-radius: 50px; border: 1px solid var(--gold); font-weight: bold; color: var(--gold); }
 
-        /* Registration / Login Modal */
-        #auth-box { text-align: center; padding: 50px 20px; background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://source.unsplash.com/random/1600x900/?gaming'); background-size: cover; height: 100vh; }
-        .btn-reg { background: var(--gold); color: black; border: none; padding: 15px 30px; font-size: 18px; font-weight: bold; border-radius: 5px; cursor: pointer; transition: 0.3s; }
-        .btn-reg:hover { background: #fff; transform: scale(1.05); }
+        /* Screens */
+        .screen { display: none; padding: 20px; text-align: center; }
+        .active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Task Section */
-        #main-app { display: none; padding: 20px; }
-        .task-card { background: #252525; padding: 20px; border-radius: 10px; margin-bottom: 15px; border-left: 5px solid var(--blue); }
-        .status-paid { color: #00ff00; font-weight: bold; }
+        /* Task Cards */
+        .card { background: var(--card); border-radius: 15px; padding: 20px; margin: 15px auto; max-width: 400px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        .task-amt { color: var(--primary); font-size: 22px; font-weight: bold; display: block; margin: 10px 0; }
+        
+        /* Buttons */
+        .btn { background: var(--primary); color: #000; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        .btn:disabled { background: #4b5563; cursor: not-allowed; }
+        .btn-withdraw { background: #ef4444; color: white; }
 
-        /* Hidden Payment Section */
-        #payment-screen { display: none; text-align: center; padding: 50px; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #334155; color: white; }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">GAMER-EARN</div>
-        <div class="wallet-btn" id="wallet">Balance: $0.00</div>
+        <div style="font-weight: bold;">TASK-EARN ₦</div>
+        <div class="balance-pill">₦<span id="nav-bal">0</span></div>
     </nav>
 
-    <div id="auth-box">
-        <h1>Welcome to the Gaming Portal</h1>
-        <p>Register today to start performing tasks and earning money.</p>
-        <p style="color: var(--gold);">Registration Fee: $10.00</p>
-        <button class="btn-reg" onclick="showPayment()">Register & Pay Now</button>
-    </div>
-
-    <div id="payment-screen">
-        <h2>Complete Your Registration</h2>
-        <p>Please send $10 to the wallet below to activate your account:</p>
-        <div style="background: #333; padding: 20px; border: 2px dashed var(--gold); display: inline-block;">
-            <strong>BITCOIN/USDT ADDRESS:</strong><br>
-            0x1234567890ABCDEF12345...
+    <div id="login-screen" class="screen active">
+        <h2 style="margin-top: 40px;">Welcome to the Hub</h2>
+        <p>Register to get your ₦200 Welcome Bonus</p>
+        <div class="card">
+            <input type="text" placeholder="Username">
+            <input type="password" placeholder="Password">
+            <button class="btn" onclick="registerUser()">Register & Claim ₦200</button>
         </div>
-        <br><br>
-        <button class="btn-reg" onclick="activateAccount()">I Have Paid (Verify)</button>
     </div>
 
-    <div id="main-app">
-        <h2>Available Tasks</h2>
+    <div id="dash-screen" class="screen">
+        <h3>Welcome Player</h3>
+        <div class="card" style="background: linear-gradient(45deg, #1e293b, #334155);">
+            <span>Total Earnings</span>
+            <div style="font-size: 32px; font-weight: bold; color: var(--gold);">₦<span id="main-bal">0</span></div>
+        </div>
+
+        <h3>Tasks for Today</h3>
         
-        <div class="task-card">
-            <h3>Task #1: Play "Crystal Miner"</h3>
-            <p>Reach Level 5 to earn reward.</p>
-            <p class="status-paid">Reward: $2.50</p>
-            <button onclick="doTask(2.50)">Start Task</button>
+        <div class="card">
+            <strong>Daily Task #1</strong>
+            <p>Perform this simple task to earn money.</p>
+            <span class="task-amt">+ ₦129</span>
+            <button class="btn" id="task1-btn" onclick="completeTask(129, 'task1-btn')">Start Task (₦129)</button>
         </div>
 
-        <div class="task-card">
-            <h3>Task #2: Watch Gaming Ad</h3>
-            <p>Watch a 30-second video.</p>
-            <p class="status-paid">Reward: $0.50</p>
-            <button onclick="doTask(0.50)">Watch Now</button>
+        <div class="card">
+            <strong>Video Bonus</strong>
+            <p>Watch a short clip to earn extra.</p>
+            <span class="task-amt">+ ₦50</span>
+            <button class="btn" onclick="completeTask(50)">Watch Video</button>
+        </div>
+
+        <div style="margin-top: 30px;">
+            <button class="btn btn-withdraw" onclick="showWithdraw()">Request Withdrawal</button>
+        </div>
+    </div>
+
+    <div id="withdraw-screen" class="screen">
+        <h2>Withdraw Funds</h2>
+        <p>Min Withdrawal: ₦5,000</p>
+        <div class="card">
+            <input type="number" id="w-amount" placeholder="Amount to Withdraw">
+            <input type="text" placeholder="Bank Account Number">
+            <button class="btn" onclick="handleWithdraw()">Process Withdrawal</button>
+            <button class="btn" style="background:none; color:white; border: 1px solid white;" onclick="goHome()">Back to Dashboard</button>
         </div>
     </div>
 
     <script>
         let balance = 0;
 
-        function showPayment() {
-            document.getElementById('auth-box').style.display = 'none';
-            document.getElementById('payment-screen').style.display = 'block';
+        function updateDisplay() {
+            document.getElementById('nav-bal').innerText = balance.toLocaleString();
+            document.getElementById('main-bal').innerText = balance.toLocaleString();
         }
 
-        function activateAccount() {
-            alert("Payment Verified! Welcome Player.");
-            document.getElementById('payment-screen').style.display = 'none';
-            document.getElementById('main-app').style.display = 'block';
+        function registerUser() {
+            // Give 200 Naira Login Bonus
+            balance = 200;
+            updateDisplay();
+            alert("Success! ₦200 Welcome Bonus has been added to your wallet.");
+            showScreen('dash-screen');
         }
 
-        function doTask(amount) {
+        function completeTask(amount, btnId) {
             balance += amount;
-            document.getElementById('wallet').innerText = "Balance: $" + balance.toFixed(2);
-            alert("Task Complete! You earned $" + amount);
+            updateDisplay();
+            alert("Congratulations! You earned ₦" + amount);
+            if(btnId) {
+                document.getElementById(btnId).disabled = true;
+                document.getElementById(btnId).innerText = "Completed ✅";
+            }
         }
+
+        function handleWithdraw() {
+            let amt = document.getElementById('w-amount').value;
+            if (balance < 5000) {
+                alert("Error: You must have at least ₦5,000 to withdraw.");
+            } else if (amt > balance) {
+                alert("Insufficient funds!");
+            } else if (amt < 5000) {
+                alert("Minimum withdrawal is ₦5,000");
+            } else {
+                alert("Request Submitted! ₦" + amt + " will be sent to your bank.");
+                balance -= amt;
+                updateDisplay();
+                goHome();
+            }
+        }
+
+        function showScreen(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function showWithdraw() { showScreen('withdraw-screen'); }
+        function goHome() { showScreen('dash-screen'); }
+
     </script>
 </body>
 </html>
