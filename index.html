@@ -1,4 +1,28 @@
 <!DOCTYPE html>
+async function portalLogin() {
+    const schoolCode = document.getElementById('schoolInput').value; // e.g. COMS-001
+    const matricNo = document.getElementById('matricInput').value;   // e.g. 2025/104
+
+    // 1. Search the database for this specific student
+    const studentRef = db.collection("schools").doc(schoolCode)
+                         .collection("students").doc(matricNo);
+    
+    const doc = await studentRef.get();
+
+    if (doc.exists) {
+        const studentData = doc.data();
+        
+        // 2. Fill the portal with THEIR data
+        document.getElementById('std-name').innerText = studentData.name;
+        document.getElementById('math-result').innerText = studentData.math;
+        document.getElementById('fee-text').innerText = "₦" + studentData.fee_balance;
+        
+        // 3. Switch screen
+        showScreen('student-dash');
+    } else {
+        alert("Error: School Code or Matric Number not found!");
+    }
+}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -179,3 +203,4 @@
 
 </body>
 </html>
+
