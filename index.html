@@ -118,14 +118,23 @@
             </div>
 
             <div id="s-profile" class="screen card">
-                <h3>Security & Profile</h3>
-                <label>Change Profile Picture (URL)</label>
-                <input type="text" id="new-img" placeholder="Paste image link here">
-                <button class="btn btn-save" onclick="updateProfile()">Update Picture</button>
-                <hr>
-                <label>Update Password</label>
-                <input type="password" id="new-pass" placeholder="New Secret Password">
-                <button class="btn btn-save" onclick="changePass()">Change Password</button>
+                <div id="s-profile" class="screen card">
+    <h3>User Profile & Photo</h3>
+    <div style="text-align: center;">
+        <img src="https://via.placeholder.com/100" id="profile-preview" class="profile-img">
+    </div>
+    
+    <label>Student Photo Link (URL)</label>
+    <input type="text" id="new-img" placeholder="Paste image link here (e.g., https://site.com/photo.jpg)">
+    <p style="font-size: 12px; color: #666;">Tip: Upload photo to PostImages.org and paste the 'Direct Link' here.</p>
+    
+    <button class="btn btn-save" onclick="updateProfile()">Save Profile Photo</button>
+    <hr>
+    
+    <label>Change Security Password</label>
+    <input type="password" id="new-pass" placeholder="Enter New Password">
+    <button class="btn btn-save" style="background: var(--navy);" onclick="changePass()">Update Password</button>
+</div>
             </div>
         </div>
     </div>
@@ -173,10 +182,21 @@
         }
 
         function updateProfile() {
-            loggedUser.pic = document.getElementById('new-img').value;
-            localStorage.setItem('GAIC_DATA', JSON.stringify(students));
-            loadStudentData();
-            alert("Profile Picture Updated!");
+            function updateProfile() {
+    const imgUrl = document.getElementById('new-img').value;
+    
+    if (imgUrl.includes("http")) {
+        loggedUser.pic = imgUrl; // Update the student's data
+        document.getElementById('display-img').src = imgUrl; // Update dashboard icon
+        document.getElementById('profile-preview').src = imgUrl; // Update preview
+        
+        // Save to permanent memory
+        localStorage.setItem('GAIC_DATA', JSON.stringify(students));
+        alert("Profile picture updated successfully!");
+    } else {
+        alert("Please enter a valid web link (URL) for the image.");
+    }
+}
         }
 
         function changePass() {
@@ -244,3 +264,4 @@
     </script>
 </body>
 </html>
+
