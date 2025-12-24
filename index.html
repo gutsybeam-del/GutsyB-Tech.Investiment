@@ -3,125 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Great Achiever International College | Pro Portal</title>
+    <title>Great Achiever International College | Elite Student Portal</title>
     <script src="https://remitademo.net/payment/v1/remita-pay-inline.bundle.js"></script>
     <style>
-        :root { --primary: #800000; --navy: #001f3f; --gold: #daa520; --light: #f4f7f6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        header { background: var(--primary); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--gold); }
+        :root { --primary: #800000; --navy: #001f3f; --gold: #daa520; --light: #f1f5f9; --white: #ffffff; }
+        
+        body { font-family: 'Inter', sans-serif; background: var(--light); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        /* Navigation & Header */
+        header { background: var(--primary); color: white; padding: 18px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--gold); box-shadow: 0 4px 10px rgba(0,0,0,0.1); z-index: 100; }
         .main-container { display: flex; flex: 1; overflow: hidden; }
-        .sidebar { width: 260px; background: var(--navy); color: white; display: none; flex-direction: column; padding-top: 20px; }
-        .sidebar a { padding: 15px 25px; color: #cbd5e1; text-decoration: none; display: block; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .content { flex: 1; padding: 25px; overflow-y: auto; }
-        .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .screen { display: none; }
-        .active-screen { display: block; animation: fadeIn 0.3s ease; }
         
-        /* Spin Game UI */
-        .wheel-container { text-align: center; padding: 20px; background: #fffde7; border: 2px solid var(--gold); border-radius: 15px; }
-        .wheel { width: 200px; height: 200px; border-radius: 50%; border: 10px solid var(--navy); margin: 20px auto; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 20px; transition: transform 3s cubic-bezier(0.17, 0.67, 0.83, 0.67); background: conic-gradient(red 0% 25%, gold 25% 50%, green 50% 75%, blue 75% 100%); }
+        .sidebar { width: 280px; background: var(--navy); color: white; display: none; flex-direction: column; padding-top: 20px; transition: all 0.3s; }
+        .sidebar a { padding: 16px 25px; color: #cbd5e1; text-decoration: none; display: flex; align-items: center; gap: 12px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+        .sidebar a:hover { background: rgba(255,255,255,0.1); color: var(--gold); }
+
+        /* Main Content */
+        .content { flex: 1; padding: 30px; overflow-y: auto; scroll-behavior: smooth; }
+        .card { background: var(--white); padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 25px; border: 1px solid #e2e8f0; }
+        .screen { display: none; max-width: 900px; margin: 0 auto; }
+        .active-screen { display: block; animation: slideUp 0.4s ease-out; }
+
+        /* Profile & Settings */
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--gold); object-fit: cover; background: #eee; margin: 0 auto 15px; display: block; }
+        input, select { width: 100%; padding: 14px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 15px; }
         
-        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
-        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        .btn-main { background: var(--primary); color: white; }
-        .btn-spin { background: #4caf50; color: white; font-size: 18px; }
-        
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #eee; padding: 10px; text-align: left; }
-        @media print { .sidebar, header, .btn, .no-print { display: none !important; } .content { padding: 0; } .card { box-shadow: none; border: 1px solid #000; } }
+        /* Buttons */
+        .btn { padding: 14px; border: none; border-radius: 10px; cursor: pointer; font-weight: 700; width: 100%; transition: 0.3s; font-size: 15px; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-gold { background: var(--gold); color: var(--navy); }
+        .btn-success { background: #10b981; color: white; }
+
+        /* Spinning Game */
+        .spin-box { text-align: center; background: radial-gradient(circle, #fff 0%, #fef3c7 100%); padding: 30px; border-radius: 20px; border: 2px dashed var(--gold); }
+        .wheel { width: 220px; height: 220px; border-radius: 50%; border: 8px solid var(--navy); margin: 20px auto; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1); background: conic-gradient(#800000 0% 12%, #daa520 12% 25%, #001f3f 25% 37%, #10b981 37% 50%, #800000 50% 62%, #daa520 62% 75%, #001f3f 75% 87%, #10b981 87% 100%); }
+        .wheel-pointer { width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 20px solid black; position: absolute; top: -5px; z-index: 5; left: 50%; transform: translateX(-50%); }
+
+        @keyframes slideUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+        @media print { .no-print { display: none !important; } .card { border: none; box-shadow: none; } }
     </style>
 </head>
 <body>
 
 <header>
-    <div>GREAT ACHIEVER INTERNATIONAL COLLEGE</div>
-    <div id="user-balance" style="font-size: 14px; color: var(--gold);">Wallet: ₦0.00</div>
+    <div style="font-weight: 800; font-size: 20px;">GREAT ACHIEVER INTERNATIONAL</div>
+    <div id="wallet-balance" style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 30px; font-weight: bold; border: 1px solid var(--gold);">Wallet: ₦0.00</div>
 </header>
 
 <div class="main-container">
     <div class="sidebar" id="sidebar">
-        <a onclick="showScreen('s-home')">🏠 Dashboard</a>
+        <a onclick="showScreen('s-home')">🏠 My Dashboard</a>
         <a onclick="showScreen('s-reg')">📝 Course Registration</a>
-        <a onclick="showScreen('s-results')">📊 Print Results</a>
-        <a onclick="showScreen('s-spin')">🎡 Spin & Win</a>
-        <a onclick="showScreen('s-fees')">💳 School Fees</a>
-        <a onclick="location.reload()" style="color:red;">🚪 Logout</a>
+        <a onclick="showScreen('s-results')">📜 View & Print Results</a>
+        <a onclick="showScreen('s-spin')">🎡 Spin & Earn Money</a>
+        <a onclick="showScreen('s-withdraw')">💰 Withdraw Funds</a>
+        <a onclick="showScreen('s-settings')">⚙️ Profile Settings</a>
+        <a onclick="location.reload()" style="color: #fda4af;">🚪 Logout</a>
     </div>
 
     <div class="content">
-        <div id="login-screen" class="screen active-screen card" style="max-width: 400px; margin: auto;">
-            <h2 style="text-align:center;">Student Access</h2>
+        <div id="login-screen" class="screen active-screen card" style="max-width: 400px;">
+            <h2 style="text-align:center; color: var(--primary);">Secure Portal Access</h2>
             <input type="text" id="l-id" placeholder="Admission ID">
             <input type="password" id="l-pass" placeholder="Password">
-            <button class="btn btn-main" onclick="doLogin()">Login</button>
-            <p onclick="adminGate()" style="text-align:center; cursor:pointer; color:gray; font-size:11px;">Admin Entry</p>
+            <button class="btn btn-primary" onclick="doLogin()">Sign In</button>
+            <p onclick="adminGate()" style="text-align:center; cursor:pointer; color:gray; font-size:12px; margin-top:20px;">Staff Only Access</p>
         </div>
 
         <div id="admin-screen" class="screen card">
-            <button onclick="showScreen('login-screen')">⬅ Back</button>
-            <h2>Admin Office</h2>
-            <input type="text" id="r-name" placeholder="Student Full Name">
-            <input type="text" id="r-id" placeholder="ID Number">
+            <h2>School Registrar Office</h2>
+            <input type="text" id="r-name" placeholder="Full Student Name">
+            <input type="text" id="r-id" placeholder="Admission ID">
             <select id="r-dept">
-                <option value="Science">Science</option>
-                <option value="Art">Art</option>
-                <option value="Commerce">Commerce</option>
+                <option value="Science">Senior Science</option>
+                <option value="Art">Senior Art</option>
+                <option value="Commerce">Senior Commerce</option>
+                <option value="JSS">Junior Secondary</option>
             </select>
-            <button class="btn btn-main" onclick="enroll()">Enroll Student</button>
+            <button class="btn btn-primary" onclick="enroll()">Enroll New Student</button>
         </div>
 
         <div id="s-spin" class="screen card">
-            <div class="wheel-container">
-                <h3>🎡 Spin & Win Real Money</h3>
-                <p>Spins Left Today: <strong id="spins-count">0</strong></p>
-                <div class="wheel" id="wheel">SPIN</div>
-                <button class="btn btn-spin" id="spin-btn" onclick="playSpin()">SPIN NOW</button>
-                <hr>
-                <p style="font-size: 12px;">Finish your free spins? Get <b>30 Extra Spins</b> for ₦500</p>
-                <button class="btn btn-main" style="background:#ff5722;" onclick="buySpins()">Buy 30 Spins (Remita)</button>
+            <div class="spin-box">
+                <h2 style="margin:0;">🎡 Daily Spin & Win</h2>
+                <p>Spin Cost: <b>₦10</b> | Free Spins Left: <b id="spin-free">0</b></p>
+                <div style="position:relative; width:fit-content; margin:auto;">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel" id="wheel"></div>
+                </div>
+                <button class="btn btn-success" id="btn-spin" onclick="startSpin()">SPIN WHEEL (₦10)</button>
+                <button class="btn btn-gold" style="margin-top:10px;" onclick="buySpins()">Buy 30 Spins (₦500 via Remita)</button>
             </div>
+        </div>
+
+        <div id="s-withdraw" class="screen card">
+            <h2>💰 Withdraw Your Earnings</h2>
+            <p>Minimum Withdrawal: <b>₦2,000</b></p>
+            <input type="number" id="w-amt" placeholder="Amount to Withdraw">
+            <input type="text" id="w-bank" placeholder="Bank Name">
+            <input type="text" id="w-acct" placeholder="Account Number">
+            <button class="btn btn-primary" onclick="handleWithdraw()">Process Withdrawal</button>
+        </div>
+
+        <div id="s-settings" class="screen card">
+            <h2>⚙️ Account Settings</h2>
+            <div style="text-align:center;">
+                <img src="" id="set-img" class="profile-pic">
+                <input type="file" id="file-in" accept="image/*" onchange="previewImg()">
+                <button class="btn btn-primary" style="width:auto;" onclick="savePhoto()">Upload Passport</button>
+            </div>
+            <hr style="margin:30px 0;">
+            <h3>Security Update</h3>
+            <input type="password" id="set-p1" placeholder="Enter New Password">
+            <input type="password" id="set-p2" placeholder="Confirm New Password">
+            <button class="btn btn-gold" onclick="savePass()">Change Password</button>
         </div>
 
         <div id="s-results" class="screen card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h2>Official Term Report</h2>
-                <button class="btn no-print" style="width:auto; padding:5px 15px;" onclick="window.print()">🖨 Print Result</button>
+            <div style="display:flex; justify-content:space-between; align-items:center;" class="no-print">
+                <h2>Transcript Record</h2>
+                <button class="btn btn-primary" style="width:auto;" onclick="window.print()">Print PDF</button>
             </div>
-            <div id="res-box">Register courses to see result sheet.</div>
+            <div id="res-sheet">Register courses to see transcript.</div>
         </div>
 
         <div id="s-reg" class="screen card">
-            <h2>Course Registration</h2>
-            <div id="sub-list" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;"></div>
-            <button class="btn btn-main" onclick="saveCourses()">Confirm Registration</button>
+            <h2>📝 Semester Course Form</h2>
+            <div id="sub-box" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+            <button class="btn btn-primary" onclick="saveCourses()" style="margin-top:20px;">Submit Registration</button>
         </div>
 
         <div id="s-home" class="screen card" style="text-align:center;">
-            <h2 id="h-name">...</h2>
-            <p id="h-dept">...</p>
-            <div style="background:#e3f2fd; padding:15px; border-radius:10px;">
-                <p>Today's News: Welcome to Great Achiever! You have free spins waiting.</p>
+            <img src="" id="h-img" class="profile-pic">
+            <h1 id="h-name" style="color:var(--primary); margin:0;">...</h1>
+            <p id="h-dept" style="font-weight:bold; color:var(--gold);">...</p>
+            <div style="background:var(--navy); color:white; padding:20px; border-radius:15px; margin-top:20px;">
+                <p>Welcome to the 2025 Academic Session. Keep your portal details safe.</p>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('GAIC_PRO_V3')) || [];
+    let db = JSON.parse(localStorage.getItem('GAIC_ELITE_V4')) || [];
     let user = null;
+    let tempImg = "";
 
     const subjects = {
-        "Science": ["Physics", "Chemistry", "Biology", "Further Maths", "Maths", "English"],
-        "Art": ["Government", "Literature", "History", "CRS/IRS", "Maths", "English"],
-        "Commerce": ["Accounts", "Commerce", "Economics", "Marketing", "Maths", "English"]
+        "Science": ["Physics", "Chemistry", "Biology", "Further Maths", "General Maths", "English"],
+        "Art": ["Government", "Literature", "History", "CRS/IRS", "General Maths", "English"],
+        "Commerce": ["Financial Accounting", "Commerce", "Economics", "Marketing", "Maths", "English"],
+        "JSS": ["Basic Tech", "Basic Science", "Social Studies", "Home Economics", "Maths", "English"]
     };
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
         document.getElementById(id).classList.add('active-screen');
-        if(id === 's-reg') renderSubs();
-        if(id === 's-results') renderResults();
-        if(id === 's-spin') updateSpinUI();
+        if(id === 's-reg') loadSubs();
+        if(id === 's-results') loadResults();
+        if(id === 's-settings') loadSettings();
+        updateUI();
     }
 
     function doLogin() {
@@ -130,93 +171,132 @@
         user = db.find(x => x.id === id && x.pass === pass);
         if(user) {
             if(!user.wallet) user.wallet = 0;
-            if(!user.spins) user.spins = 5;
+            if(user.spins === undefined) user.spins = 5;
             document.getElementById('sidebar').style.display = 'flex';
-            document.getElementById('h-name').innerText = user.name;
-            document.getElementById('h-dept').innerText = user.dept + " Dept";
-            updateSpinUI();
             showScreen('s-home');
-        } else alert("Invalid ID");
+        } else alert("Access Denied");
     }
 
-    function renderSubs() {
-        const box = document.getElementById('sub-list');
-        box.innerHTML = "";
-        subjects[user.dept].forEach(s => {
-            const checked = user.regSubs && user.regSubs.includes(s) ? "checked" : "";
-            box.innerHTML += `<div><input type="checkbox" value="${s}" ${checked} class="sub-item"> ${s}</div>`;
-        });
+    function updateUI() {
+        if(!user) return;
+        document.getElementById('wallet-balance').innerText = "Wallet: ₦" + user.wallet.toLocaleString();
+        document.getElementById('h-name').innerText = user.name;
+        document.getElementById('h-dept').innerText = user.dept.toUpperCase();
+        document.getElementById('h-img').src = user.img || "https://via.placeholder.com/120";
+        document.getElementById('spin-free').innerText = user.spins;
     }
 
-    function saveCourses() {
-        let selected = [];
-        document.querySelectorAll('.sub-item:checked').forEach(i => selected.push(i.value));
-        user.regSubs = selected;
-        localStorage.setItem('GAIC_PRO_V3', JSON.stringify(db));
-        alert("Registration Updated!");
-    }
-
-    function renderResults() {
-        const box = document.getElementById('res-box');
-        if(!user.regSubs || user.regSubs.length === 0) return;
-        let html = `<h3>${user.name} (${user.id})</h3><table><tr><th>Subject</th><th>CA</th><th>Exam</th><th>Total</th></tr>`;
-        user.regSubs.forEach(s => html += `<tr><td>${s}</td><td>30</td><td>55</td><td>85</td></tr>`);
-        box.innerHTML = html + "</table>";
-    }
-
-    // --- SPIN LOGIC ---
-    function updateSpinUI() {
-        document.getElementById('spins-count').innerText = user.spins;
-        document.getElementById('user-balance').innerText = "Wallet: ₦" + user.wallet.toLocaleString();
-    }
-
-    function playSpin() {
-        if(user.spins <= 0) return alert("No spins left! Buy more with ₦500.");
+    // --- SPINNING GAME ---
+    function startSpin() {
+        if(user.spins <= 0 && user.wallet < 10) return alert("You need ₦10 to spin or buy more spins!");
+        
+        const btn = document.getElementById('btn-spin');
         const wheel = document.getElementById('wheel');
-        const btn = document.getElementById('spin-btn');
         btn.disabled = true;
-        
-        const deg = Math.floor(Math.random() * 360) + 1440; // Spin at least 4 times
-        wheel.style.transform = `rotate(${deg}deg)`;
-        
+
+        if(user.spins > 0) user.spins--; else user.wallet -= 10;
+
+        const rotation = Math.floor(Math.random() * 360) + 1800;
+        wheel.style.transform = `rotate(${rotation}deg)`;
+
         setTimeout(() => {
-            const winAmts = [10, 50, 0, 100, 5, 20];
-            const win = winAmts[Math.floor(Math.random() * winAmts.length)];
-            user.wallet += win;
-            user.spins -= 1;
-            localStorage.setItem('GAIC_PRO_V3', JSON.stringify(db));
-            updateSpinUI();
-            alert(win > 0 ? `🎊 You won ₦${win}!` : "😢 No win this time. Try again!");
+            const prizes = [0, 5, 10, 20, 50, 100, 2, 0];
+            const prize = prizes[Math.floor(Math.random() * prizes.length)];
+            user.wallet += prize;
+            saveData();
+            updateUI();
+            alert(prize > 0 ? `🎉 You won ₦${prize}!` : "😢 Try again!");
             btn.disabled = false;
-        }, 3100);
+        }, 4100);
     }
 
     function buySpins() {
         RmPaymentEngine.init({
-            key: "REVXU0VSfDQwMjc1fGYzY2M0Y2VlYTNkM2IyZTM5YTZlMGRhNmU3YmU5YWVl", // Demo Key
+            key: "REVXU0VSfDQwMjc1fGYzY2M0Y2VlYTNkM2IyZTM5YTZlMGRhNmU3YmU5YWVl", 
             transactionId: "SPIN-" + Date.now(),
             amount: 500,
             firstName: user.name,
             email: user.id + "@school.com",
-            onSuccess: (response) => {
-                user.spins += 30;
-                localStorage.setItem('GAIC_PRO_V3', JSON.stringify(db));
-                updateSpinUI();
-                alert("30 Spins Added!");
-            }
+            onSuccess: () => { user.spins += 30; saveData(); updateUI(); alert("30 Spins Added!"); }
         });
+    }
+
+    // --- WITHDRAWAL ---
+    function handleWithdraw() {
+        const amt = document.getElementById('w-amt').value;
+        if(user.wallet < 2000) return alert("Minimum withdrawal is ₦2,000. Keep spinning!");
+        if(amt > user.wallet) return alert("Insufficient funds!");
+        user.wallet -= amt;
+        saveData();
+        updateUI();
+        alert("Withdrawal request for ₦" + amt + " submitted to School Admin!");
+    }
+
+    // --- SETTINGS ---
+    function loadSettings() {
+        document.getElementById('set-img').src = user.img || "https://via.placeholder.com/120";
+    }
+
+    function previewImg() {
+        const file = document.getElementById('file-in').files[0];
+        const reader = new FileReader();
+        reader.onloadend = () => { tempImg = reader.result; document.getElementById('set-img').src = tempImg; };
+        if(file) reader.readAsDataURL(file);
+    }
+
+    function savePhoto() {
+        if(!tempImg) return alert("Select a photo!");
+        user.img = tempImg;
+        saveData();
+        alert("Passport Updated!");
+    }
+
+    function savePass() {
+        const p1 = document.getElementById('set-p1').value;
+        const p2 = document.getElementById('set-p2').value;
+        if(p1 !== p2) return alert("Passwords do not match!");
+        user.pass = p1;
+        saveData();
+        alert("Password Updated!");
+    }
+
+    // --- COURSES & RESULTS ---
+    function loadSubs() {
+        const box = document.getElementById('sub-box');
+        box.innerHTML = "";
+        subjects[user.dept].forEach(s => {
+            const chk = user.reg && user.reg.includes(s) ? "checked" : "";
+            box.innerHTML += `<div><input type="checkbox" value="${s}" ${chk} class="sub-ch"> ${s}</div>`;
+        });
+    }
+
+    function saveCourses() {
+        let sel = [];
+        document.querySelectorAll('.sub-ch:checked').forEach(i => sel.push(i.value));
+        user.reg = sel;
+        saveData();
+        alert("Registration Successful!");
+    }
+
+    function loadResults() {
+        const box = document.getElementById('res-sheet');
+        if(!user.reg) return;
+        let html = `<h3>${user.name} Transcript</h3><table><tr><th>Subject</th><th>Score</th><th>Grade</th></tr>`;
+        user.reg.forEach(s => html += `<tr><td>${s}</td><td>82</td><td>A1</td></tr>`);
+        box.innerHTML = html + "</table>";
     }
 
     function enroll() {
         const name = document.getElementById('r-name').value;
         const id = document.getElementById('r-id').value;
         const dept = document.getElementById('r-dept').value;
-        db.push({ name, id, dept, pass: "1234", wallet: 0, spins: 5, regSubs: [] });
-        localStorage.setItem('GAIC_PRO_V3', JSON.stringify(db));
-        alert("Enrolled!");
+        db.push({ name, id, dept, pass: "1234", wallet: 0, spins: 5, img: "", reg: [] });
+        saveData();
+        alert("Student Enrolled!");
     }
 
-    function adminGate() { if(prompt("Key:") === "777") showScreen('admin-screen'); }
+    function saveData() { localStorage.setItem('GAIC_ELITE_V4', JSON.stringify(db)); }
+    function adminGate() { if(prompt("Admin Key:") === "777") showScreen('admin-screen'); }
 </script>
 </body>
 </html>
