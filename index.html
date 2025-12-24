@@ -3,109 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Great Achiever Portal | Direct Upload Version</title>
+    <title>Great Achiever | Professional Portal</title>
     <script src="https://checkout.flutterwave.com/v3.js"></script>
     <style>
-        :root { --primary: #800000; --navy: #001f3f; --gold: #daa520; --light: #f8f9fa; }
+        :root { --primary: #800000; --navy: #001f3f; --gold: #daa520; --light: #f4f7f6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--light); margin: 0; display: flex; flex-direction: column; height: 100vh; }
-
+        
         header { background: var(--primary); color: white; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--gold); }
         .wrapper { display: flex; flex: 1; overflow: hidden; }
         
         /* Sidebar */
-        .sidebar { width: 260px; background: #1a1a1a; color: white; display: none; flex-direction: column; padding: 20px 0; }
-        .sidebar a { padding: 15px 25px; color: #ccc; text-decoration: none; display: block; cursor: pointer; border-left: 4px solid transparent; }
-        .sidebar a:hover { background: #333; color: white; border-left-color: var(--gold); }
+        .sidebar { width: 260px; background: var(--navy); color: white; display: none; flex-direction: column; padding: 20px 0; }
+        .sidebar a { padding: 15px 25px; color: #cbd5e1; text-decoration: none; display: block; cursor: pointer; border-left: 4px solid transparent; }
+        .sidebar a:hover { background: #1e293b; color: white; border-left-color: var(--gold); }
 
-        /* Content */
+        /* Content Area */
         .content { flex: 1; padding: 25px; overflow-y: auto; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 5px solid var(--primary); }
         .screen { display: none; }
-        .active-screen { display: block; animation: fadeIn 0.4s ease; }
+        .active-screen { display: block; animation: fadeIn 0.3s ease; }
 
-        /* Image Styling */
-        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; display: block; margin: 10px auto; background: #eee; }
-        
+        /* Admin Navigation */
+        .admin-nav { background: #eee; padding: 10px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 10px; }
+        .back-btn { background: #666; color: white; padding: 8px 15px; border-radius: 5px; text-decoration: none; font-size: 13px; cursor: pointer; }
+
+        /* Student UI */
+        .profile-img { width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--gold); object-fit: cover; display: block; margin: 10px auto; background: #ddd; }
         input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; }
+        .btn { padding: 14px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 16px; margin-top: 10px; transition: 0.2s; }
         .btn-main { background: var(--primary); color: white; }
-        
+        .btn-ad { background: #25d366; color: white; animation: pulse 2s infinite; }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="font-weight: 800;">GREAT ACHIEVER COLLEGE</div>
-    <div id="user-display" style="font-size: 12px;">Welcome, Guest</div>
+    <div style="font-weight: 900; font-size: 20px;">GREAT ACHIEVER COLLEGE</div>
+    <div id="user-display" style="font-size: 12px;">Portal Guest</div>
 </header>
 
 <div class="wrapper">
     <div class="sidebar" id="sidebar">
-        <a onclick="showScreen('s-home')">🏠 Dashboard</a>
-        <a onclick="showScreen('s-results')">📊 Results</a>
-        <a onclick="showScreen('s-fees')">💳 Payments</a>
+        <a onclick="showScreen('s-home')">🏠 My Dashboard</a>
+        <a onclick="showScreen('s-results')">📊 View Results</a>
+        <a onclick="showScreen('s-fees')">💳 Pay Fees</a>
         <a onclick="showScreen('s-profile')">👤 My Passport</a>
-        <a onclick="location.reload()" style="color:red;">Logout</a>
+        <a onclick="location.reload()" style="color:#ff6b6b; font-weight:bold; border-top:1px solid #333;">🚪 Logout</a>
     </div>
 
     <div class="content">
-        <div id="login-screen" class="screen active-screen card" style="max-width: 400px; margin: auto;">
-            <h2 style="text-align:center;">Student Login</h2>
+        <div id="login-screen" class="screen active-screen card" style="max-width: 400px; margin: 40px auto;">
+            <h2 style="text-align:center; color:var(--primary);">Student Login</h2>
             <input type="text" id="l-id" placeholder="Admission Number">
             <input type="password" id="l-pass" placeholder="Password">
-            <button class="btn btn-main" onclick="doLogin()">Login</button>
-            <p onclick="adminGate()" style="text-align:center; font-size:11px; cursor:pointer; color:gray; margin-top:15px;">Staff Portal</p>
+            <button class="btn btn-main" onclick="doLogin()">Sign In</button>
+            <p onclick="adminGate()" style="text-align:center; font-size:11px; color:gray; cursor:pointer; margin-top:15px;">Staff Management</p>
         </div>
 
         <div id="admin-screen" class="screen card">
-            <h2>Admin: Enroll Student</h2>
-            <input type="text" id="r-name" placeholder="Full Name">
-            <input type="text" id="r-id" placeholder="Admission ID">
-            <select id="r-class"><option value="50000">JSS (50k)</option><option value="80000">SSS Sci (80k)</option></select>
-            <button class="btn btn-main" onclick="enroll()">Register Student</button>
-            <hr>
-            <h3>Manage Results</h3>
-            <select id="adm-sel"></select>
-            <input type="number" id="adm-m" placeholder="Maths Score">
-            <input type="number" id="adm-e" placeholder="English Score">
-            <button class="btn btn-main" onclick="saveRes()">Upload Scores</button>
+            <div class="admin-nav">
+                <button class="back-btn" onclick="location.reload()">⬅ Back to Portal Home</button>
+                <span style="font-weight:bold; color:var(--primary); margin-left:auto;">Admin Office</span>
+            </div>
+            
+            <h3>Step 1: Enroll New Student</h3>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <input type="text" id="r-name" placeholder="Full Name">
+                <input type="text" id="r-id" placeholder="Admission ID">
+                <select id="r-class">
+                    <option value="50000">JSS (₦50,000)</option>
+                    <option value="70000">SSS Art (₦70,000)</option>
+                    <option value="80000">SSS Science (₦80,000)</option>
+                </select>
+                <input type="text" id="r-pass" placeholder="Password" value="1234">
+            </div>
+            <button class="btn btn-main" onclick="enroll()">Register & Save Student</button>
+            
+            <hr style="margin:30px 0;">
+            
+            <h3>Step 2: Input Academic Scores</h3>
+            <select id="adm-sel" style="background:#fff9e6;"></select>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <input type="number" id="adm-m" placeholder="Mathematics Score">
+                <input type="number" id="adm-e" placeholder="English Score">
+            </div>
+            <button class="btn btn-main" style="background:var(--navy)" onclick="saveRes()">Upload Result to Student</button>
         </div>
 
         <div id="s-home" class="screen card" style="text-align:center;">
-            <img src="" id="h-img" class="profile-img" alt="Passport">
+            <img src="" id="h-img" class="profile-img">
             <h2 id="h-name">Student Name</h2>
             <p id="h-id">ID: 000</p>
-            <div style="background:#fff3cd; padding:15px; border-radius:10px; margin-top:20px;">
-                <p>Click below to verify your account status for the term.</p>
-                <button class="btn btn-main" onclick="window.open('https://shrinkme.io/your_id')">Verify Account (Sponsored)</button>
+            
+            <div style="background:#e8f5e9; border:2px dashed #2e7d32; padding:20px; border-radius:12px; margin-top:20px;">
+                <h3 style="margin:0; color:#1b5e20;">🔓 Result Unlocker</h3>
+                <p style="font-size: 13px;">To see your termly results, you must click the link below to verify your academic session.</p>
+                <button class="btn btn-ad" onclick="unlockProfit()">Click to Verify & Unlock Results</button>
             </div>
-        </div>
-
-        <div id="s-profile" class="screen card">
-            <h3>Update Your Passport Photograph</h3>
-            <div style="text-align: center;">
-                <img src="" id="p-preview" class="profile-img" alt="Preview">
-            </div>
-            <label>Select Image from Gallery:</label>
-            <input type="file" id="file-input" accept="image/*" onchange="previewImage()">
-            <button class="btn btn-main" onclick="uploadPassport()">Save Passport to Portal</button>
         </div>
 
         <div id="s-results" class="screen card">
-            <h3>Termly Results</h3>
-            <table width="100%" border="1" style="border-collapse:collapse;">
-                <tr style="background:#eee;"><th>Subject</th><th>Score</th></tr>
-                <tr><td>Mathematics</td><td id="v-m">-</td></tr>
-                <tr><td>English</td><td id="v-e">-</td></tr>
+            <h2>Academic Performance</h2>
+            <div id="result-locked-msg" style="color:red; font-weight:bold; text-align:center; padding:20px;">
+                ⚠️ RESULTS ARE LOCKED!<br>Go to "Dashboard" and click "Verify" to unlock.
+            </div>
+            <table width="100%" border="1" style="border-collapse:collapse; display:none;" id="res-table">
+                <tr style="background:#eee;"><th>Subject</th><th>Score</th><th>Grade</th></tr>
+                <tr><td>Mathematics</td><td id="v-m">-</td><td id="g-m">-</td></tr>
+                <tr><td>English Language</td><td id="v-e">-</td><td id="g-e">-</td></tr>
             </table>
         </div>
 
+        <div id="s-profile" class="screen card">
+            <h3>Update Passport Photograph</h3>
+            <img src="" id="p-preview" class="profile-img">
+            <input type="file" id="file-input" accept="image/*" onchange="previewImage()">
+            <button class="btn btn-main" onclick="uploadPassport()">Save Passport Photo</button>
+        </div>
+
         <div id="s-fees" class="screen card">
-            <h3>School Fees</h3>
-            <p>Balance: <strong id="v-fee">₦0.00</strong></p>
-            <div id="v-stat" style="padding:5px; display:inline-block; border-radius:4px;"></div><br><br>
-            <button class="btn btn-main" id="pay-btn" onclick="pay()">Pay via Flutterwave</button>
+            <h3>Fee Management</h3>
+            <p>Outstanding: <strong id="v-fee">₦0.00</strong></p>
+            <div id="v-stat" style="padding:10px; border-radius:5px; font-weight:bold;"></div><br>
+            <button class="btn btn-main" style="background:var(--gold); color:black;" id="pay-btn" onclick="pay()">Pay via Flutterwave</button>
         </div>
     </div>
 </div>
@@ -114,32 +137,48 @@
     let db = JSON.parse(localStorage.getItem('GAIC_DB')) || [];
     let user = null;
     let tempImg = "";
+    let resultUnlocked = false;
+
+    // --- YOUR PROFIT LINK (Replace with your link from ShrinkMe.io or AdFly) ---
+    const AD_LINK = "https://shrinkme.io/your_id"; 
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
         document.getElementById(id).classList.add('active-screen');
     }
 
+    function unlockProfit() {
+        window.open(AD_LINK, '_blank');
+        resultUnlocked = true;
+        alert("Verification Success! You can now check your results.");
+        showScreen('s-results');
+        document.getElementById('res-table').style.display = 'table';
+        document.getElementById('result-locked-msg').style.display = 'none';
+    }
+
     function adminGate() {
-        if(prompt("Key:") === "777") {
+        if(prompt("Staff Key:") === "777") {
             const sel = document.getElementById('adm-sel');
             sel.innerHTML = db.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
             showScreen('admin-screen');
+            document.getElementById('sidebar').style.display = 'none';
         }
     }
 
     function enroll() {
+        const name = document.getElementById('r-name').value;
+        const id = document.getElementById('r-id').value;
+        if(!name || !id) return alert("Fill all fields");
+        
         db.push({
-            name: document.getElementById('r-name').value,
-            id: document.getElementById('r-id').value,
-            pass: "1234",
+            name: name, id: id,
+            pass: document.getElementById('r-pass').value,
             fee: document.getElementById('r-class').value,
-            paid: false,
-            img: "",
-            math: "-", eng: "-"
+            paid: false, img: "", math: "-", eng: "-"
         });
         localStorage.setItem('GAIC_DB', JSON.stringify(db));
-        alert("Enrolled!");
+        alert("Student Saved!");
+        adminGate(); // Refresh list
     }
 
     function saveRes() {
@@ -147,7 +186,7 @@
         s.math = document.getElementById('adm-m').value;
         s.eng = document.getElementById('adm-e').value;
         localStorage.setItem('GAIC_DB', JSON.stringify(db));
-        alert("Result Saved!");
+        alert("Result Uploaded to " + s.name);
     }
 
     function doLogin() {
@@ -157,7 +196,7 @@
             document.getElementById('user-display').innerText = user.name;
             refreshData();
             showScreen('s-home');
-        } else { alert("Wrong ID/Pass"); }
+        } else { alert("Wrong Admission ID or Password"); }
     }
 
     function refreshData() {
@@ -168,28 +207,27 @@
         document.getElementById('v-m').innerText = user.math;
         document.getElementById('v-e').innerText = user.eng;
         document.getElementById('v-fee').innerText = "₦" + parseInt(user.fee).toLocaleString();
-        document.getElementById('v-stat').innerText = user.paid ? "PAID" : "UNPAID";
+        document.getElementById('v-stat').innerText = user.paid ? "PAID ✅" : "UNPAID ❌";
         document.getElementById('v-stat').style.background = user.paid ? "#d4edda" : "#f8d7da";
         document.getElementById('pay-btn').style.display = user.paid ? 'none' : 'block';
     }
 
-    // --- REAL IMAGE UPLOAD LOGIC ---
     function previewImage() {
         const file = document.getElementById('file-input').files[0];
         const reader = new FileReader();
         reader.onloadend = function() {
-            tempImg = reader.result; // This is the image data
+            tempImg = reader.result;
             document.getElementById('p-preview').src = tempImg;
         }
-        if (file) { reader.readAsDataURL(file); }
+        if (file) reader.readAsDataURL(file);
     }
 
     function uploadPassport() {
-        if(!tempImg) return alert("Select a photo first!");
+        if(!tempImg) return alert("Pick a photo!");
         user.img = tempImg;
         localStorage.setItem('GAIC_DB', JSON.stringify(db));
         refreshData();
-        alert("Passport Updated Successfully!");
+        alert("Passport Saved!");
     }
 
     function pay() {
@@ -203,6 +241,7 @@
                     user.paid = true;
                     localStorage.setItem('GAIC_DB', JSON.stringify(db));
                     refreshData();
+                    alert("Payment Success!");
                 }
             }
         });
