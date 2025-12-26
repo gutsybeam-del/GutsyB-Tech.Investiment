@@ -1,195 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Beam Survey</title>
+    <title>Beam Survey | Earn by Sharing Opinions</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <script>
-        (function(e,t,o,n){e.visitorGlobalObjectAlias=n;e[e.visitorGlobalObjectAlias]=e[e.visitorGlobalObjectAlias]||function(){(e[e.visitorGlobalObjectAlias].q=e[e.visitorGlobalObjectAlias].q||[]).push(arguments)};e[e.visitorGlobalObjectAlias].l=(new Date).getTime();r=t.createElement("script");r.src=o;r.async=true;i=t.getElementsByTagName("script")[0];i.parentNode.insertBefore(r,i)})(window,document,"https://diffuser-cdn.app-us1.com/diffuser/diffuser.js","vgo");
-        vgo('setAccount', '28018940'); vgo('process');
-    </script>
     
     <style>
         :root { --primary: #0969da; --dark: #0d1117; --gray: #f6f8fa; --border: #d0d7de; --success: #1a7f37; --gold: #daa520; }
         body { font-family: -apple-system, system-ui, sans-serif; background: var(--gray); margin: 0; color: #1f2328; }
         
-        /* Layout */
-        header { background: var(--dark); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 100; }
-        .main-container { display: flex; height: calc(100vh - 60px); }
+        /* AUTH SCREENS */
+        #auth-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: var(--dark); z-index: 1000; display: flex; align-items: center; justify-content: center; }
+        .auth-card { background: white; padding: 40px; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .auth-tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #eee; }
+        .auth-tabs div { flex: 1; text-align: center; padding: 10px; cursor: pointer; font-weight: bold; color: #666; }
+        .auth-tabs .active { color: var(--primary); border-bottom: 3px solid var(--primary); }
         
-        /* Navigation Sidebar */
+        /* DASHBOARD LAYOUT */
+        header { background: var(--dark); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--primary); position: sticky; top: 0; z-index: 100; }
+        .main-container { display: flex; height: calc(100vh - 65px); }
         nav { width: 250px; background: white; border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-        nav a { padding: 15px 25px; text-decoration: none; color: #444; border-bottom: 1px solid #eee; cursor: pointer; transition: 0.2s; font-weight: 500; }
-        nav a:hover { background: #f0f7ff; color: var(--primary); }
-        nav a.active { background: var(--primary); color: white; }
+        nav a { padding: 15px 25px; text-decoration: none; color: #444; border-bottom: 1px solid #eee; cursor: pointer; font-weight: 500; }
+        nav a:hover, nav a.active { background: #f0f7ff; color: var(--primary); }
 
-        /* Main Content Area */
         .content { flex: 1; padding: 25px; overflow-y: auto; }
         .screen { display: none; max-width: 800px; margin: auto; }
-        .active-screen { display: block; animation: fadeIn 0.3s ease; }
+        .active-screen { display: block; animation: fadeIn 0.3s; }
 
-        /* Wallet Card Styles */
-        .balance-card { background: linear-gradient(135deg, var(--dark) 0%, #161b22 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 25px; position: relative; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .balance-card h2 { margin: 0; font-size: 14px; opacity: 0.8; text-transform: uppercase; }
-        .balance-card .amount { font-size: 32px; font-weight: 800; margin: 10px 0; }
-        
-        /* Grid & Components */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; margin-top: 10px; }
-        
-        /* Alerts */
-        .alert { padding: 12px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; border-left: 4px solid var(--primary); background: #f0f7ff; }
+        /* UI COMPONENTS */
+        .balance-card { background: linear-gradient(135deg, #0d1117 0%, #0969da 100%); color: white; padding: 30px; border-radius: 15px; margin-bottom: 25px; }
+        .card { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 15px; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; }
+        .btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; }
+        .btn-withdraw { background: var(--success); margin-top: 10px; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { .main-container { flex-direction: column; } nav { width: 100%; flex-direction: row; overflow-x: auto; } nav a { padding: 10px 15px; font-size: 13px; white-space: nowrap; } }
+        /* AD SPACE SIMULATION */
+        .ad-slot { background: #eee; border: 1px dashed #ccc; padding: 10px; text-align: center; font-size: 10px; color: #999; margin: 15px 0; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @media (max-width: 768px) { .main-container { flex-direction: column; } nav { width: 100%; flex-direction: row; overflow-x: auto; } }
     </style>
 </head>
 <body>
 
+<div id="auth-overlay">
+    <div class="auth-card">
+        <h2 style="text-align:center; margin-top:0;">BEAM SURVEY</h2>
+        <div class="auth-tabs">
+            <div id="tab-login" class="active" onclick="toggleAuth('login')">Login</div>
+            <div id="tab-reg" onclick="toggleAuth('reg')">Register</div>
+        </div>
+        
+        <div id="auth-form">
+            <input type="email" id="auth-email" placeholder="Email Address">
+            <input type="password" id="auth-pass" placeholder="Password">
+            <div id="reg-extra" style="display:none;">
+                <input type="text" id="auth-name" placeholder="Full Name">
+                <input type="text" id="auth-phone" placeholder="Phone Number">
+            </div>
+            <button class="btn" onclick="processAuth()">Get Started</button>
+        </div>
+    </div>
+</div>
+
 <header>
-    <div style="font-weight: 800; font-size: 20px;">BEAM SURVEY</div>
-    <div id="user-initials" style="background: var(--primary); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">BS</div>
+    <div style="font-weight: 800; font-size: 18px;">BEAM SURVEY</div>
+    <div id="user-display" style="font-size: 12px; color: var(--gold);">Guest Mode</div>
 </header>
 
 <div class="main-container">
-    <nav>
-        <a onclick="showScreen('s-dash')" id="m-dash" class="active">🏠 Dashboard</a>
-        <a onclick="showScreen('s-surveys')" id="m-surveys">📝 Surveys</a>
-        <a onclick="showScreen('s-trans')" id="m-trans">💸 Transactions</a>
-        <a onclick="showScreen('s-bonus')" id="m-bonus">🎁 Bonus</a>
-        <a onclick="showScreen('s-profile')" id="m-profile">👤 My Profile</a>
+    <nav id="app-nav" style="display:none;">
+        <a onclick="showScreen('s-dash')" class="active">🏠 Dashboard</a>
+        <a onclick="showScreen('s-surveys')">📝 Take Surveys</a>
+        <a onclick="showScreen('s-withdraw')">💰 Withdrawal</a>
+        <a onclick="showScreen('s-profile')">👤 Profile</a>
+        <a onclick="location.reload()" style="color:red;">🚪 Logout</a>
     </nav>
 
     <div class="content">
-        <div id="s-dash" class="screen active-screen">
+        <div id="s-dash" class="screen">
             <div class="balance-card">
-                <h2>Total Earnings</h2>
-                <div class="amount">₦<span id="bal-val">0.00</span></div>
-                <div style="font-size: 12px; color: var(--gold);">Verified Member ✅</div>
+                <p style="margin:0; opacity:0.8;">Wallet Balance</p>
+                <h1 style="font-size:36px; margin:10px 0;">₦<span id="user-bal">0.00</span></h1>
+                <p style="font-size:12px;">Earned from 0 tasks today</p>
             </div>
-            
-            <div class="alert">
-                <strong>Notification:</strong> 3 new surveys are available in your region!
-            </div>
-
-            <div class="grid">
-                <div class="card">
-                    <h3>Pending Surveys</h3>
-                    <p style="font-size: 24px; font-weight: bold;">03</p>
-                </div>
-                <div class="card">
-                    <h3>Successful Claims</h3>
-                    <p style="font-size: 24px; font-weight: bold;">12</p>
-                </div>
+            <div class="ad-slot">ADVERTISEMENT: Space available for Google AdSense</div>
+            <div class="card">
+                <h3>Welcome to Beam Survey</h3>
+                <p>Complete your daily tasks to earn rewards. Minimum payout is ₦5,000.</p>
             </div>
         </div>
 
         <div id="s-surveys" class="screen">
             <h2>Available Surveys</h2>
-            <div class="card" style="margin-bottom: 15px;">
-                <h4>Market Research: Consumer Electronics</h4>
-                <p style="font-size: 13px; color: #666;">Time: 5 mins | Reward: ₦250</p>
-                <button class="btn" onclick="startSurvey(250)">Start Survey</button>
-            </div>
-            <div class="card">
-                <h4>Education Feedback Survey</h4>
-                <p style="font-size: 13px; color: #666;">Time: 2 mins | Reward: ₦100</p>
-                <button class="btn" onclick="startSurvey(100)">Start Survey</button>
-            </div>
-        </div>
-
-        <div id="s-trans" class="screen">
-            <h2>Transaction History</h2>
-            <div class="card">
-                <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                    <tr style="border-bottom: 1px solid #eee;">
-                        <th style="text-align: left; padding: 10px;">Date</th>
-                        <th style="text-align: left; padding: 10px;">Type</th>
-                        <th style="text-align: right; padding: 10px;">Amount</th>
-                    </tr>
-                    <tbody id="trans-list">
-                        <tr><td colspan="3" style="text-align: center; padding: 20px;">No transactions yet</td></tr>
-                    </tbody>
-                </table>
+            <div id="survey-list">
+                <div class="card">
+                    <h4>Nigerian Food Industry Survey</h4>
+                    <p>Earn ₦200 | Time: 3 Mins</p>
+                    <button class="btn" onclick="runSurvey('Food Preference', 200)">Start Task</button>
+                </div>
+                <div class="card">
+                    <h4>Crypto & Fintech Adoption</h4>
+                    <p>Earn ₦500 | Time: 5 Mins</p>
+                    <button class="btn" onclick="runSurvey('Crypto Trends', 500)">Start Task</button>
+                </div>
             </div>
         </div>
 
-        <div id="s-bonus" class="screen">
-            <h2>Claim Bonus</h2>
-            <div class="card" style="text-align: center; border: 2px dashed var(--gold);">
-                <h1 style="color: var(--gold); font-size: 40px;">🎁</h1>
-                <h3>Daily Login Bonus</h3>
-                <p>Claim your free ₦50 today!</p>
-                <button class="btn" style="background: var(--gold); color: black;" onclick="claimBonus()">Claim Now</button>
-            </div>
-        </div>
-
-        <div id="s-profile" class="screen">
-            <h2>My Profile</h2>
+        <div id="s-withdraw" class="screen">
+            <h2>Withdraw Funds</h2>
             <div class="card">
-                <label style="font-size: 12px; font-weight: bold;">FULL NAME</label>
-                <input type="text" id="p-name" value="Beam User" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:5px;">
-                
-                <label style="font-size: 12px; font-weight: bold;">EMAIL ADDRESS</label>
-                <input type="email" id="p-email" value="user@beamsurvey.com" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:5px;">
-                
-                <button class="btn" onclick="alert('Profile Updated!')">Update Information</button>
+                <p>Available: <b>₦<span class="curr-bal">0.00</span></b></p>
+                <div class="ad-slot">Sponsored Content: Investing for the future</div>
+                <input type="number" id="w-amt" placeholder="Amount to withdraw">
+                <select id="w-bank">
+                    <option>Select Bank</option>
+                    <option>Kuda Bank</option>
+                    <option>OPay / Palmpay</option>
+                    <option>Zenith Bank</option>
+                    <option>First Bank</option>
+                </select>
+                <input type="text" placeholder="Account Number">
+                <button class="btn btn-withdraw" onclick="requestWithdraw()">Request Payout</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    let wallet = parseFloat(localStorage.getItem('beam_balance')) || 0.00;
-    
-    function updateBal() {
-        document.getElementById('bal-val').innerText = wallet.toLocaleString();
-        localStorage.setItem('beam_balance', wallet);
+    let userData = { name: "", email: "", balance: 0, isAuth: false };
+    let currentMode = 'login';
+
+    function toggleAuth(mode) {
+        currentMode = mode;
+        document.getElementById('tab-login').classList.toggle('active', mode === 'login');
+        document.getElementById('tab-reg').classList.toggle('active', mode === 'reg');
+        document.getElementById('reg-extra').style.display = (mode === 'reg') ? 'block' : 'none';
+    }
+
+    function processAuth() {
+        const email = document.getElementById('auth-email').value;
+        if(!email) return alert("Please enter your email");
+        
+        userData.email = email;
+        userData.name = document.getElementById('auth-name').value || "Beam Member";
+        userData.isAuth = true;
+        
+        document.getElementById('auth-overlay').style.display = 'none';
+        document.getElementById('app-nav').style.display = 'flex';
+        document.getElementById('user-display').innerText = userData.name.toUpperCase();
+        showScreen('s-dash');
     }
 
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-        
         document.getElementById(id).classList.add('active-screen');
-        document.getElementById('m-' + id.split('-')[1]).classList.add('active');
     }
 
-    function startSurvey(amt) {
-        if(confirm("Ready to start this survey for ₦" + amt + "?")) {
-            alert("Survey Started! Complete all questions to receive payment.");
-            setTimeout(() => {
-                wallet += amt;
-                updateBal();
-                addTrans("Survey Success", amt);
-                alert("Credit Received: ₦" + amt);
-            }, 2000);
+    function runSurvey(title, reward) {
+        const q = prompt(`Survey: ${title}\nQuestion: How often do you use digital payment apps?\n1. Always\n2. Sometimes\n3. Never`);
+        if(q) {
+            alert("Survey submitted! Reward ₦" + reward + " credited.");
+            userData.balance += reward;
+            updateBalance();
         }
     }
 
-    function claimBonus() {
-        wallet += 50;
-        updateBal();
-        addTrans("Daily Bonus", 50);
-        alert("Daily bonus of ₦50 added!");
+    function requestWithdraw() {
+        const amt = document.getElementById('w-amt').value;
+        if(userData.balance < 5000) {
+            alert("Error: Minimum withdrawal is ₦5,000. You need ₦" + (5000 - userData.balance) + " more.");
+        } else {
+            alert("Withdrawal request sent!");
+            userData.balance -= amt;
+            updateBalance();
+        }
     }
 
-    function addTrans(type, amt) {
-        const list = document.getElementById('trans-list');
-        const date = new Date().toLocaleDateString();
-        const row = `<tr>
-            <td style="padding: 10px;">${date}</td>
-            <td style="padding: 10px;">${type}</td>
-            <td style="padding: 10px; text-align: right; color: var(--success); font-weight: bold;">+₦${amt}</td>
-        </tr>`;
-        if (list.innerHTML.includes("No transactions")) list.innerHTML = "";
-        list.innerHTML = row + list.innerHTML;
+    function updateBalance() {
+        document.getElementById('user-bal').innerText = userData.balance.toLocaleString();
+        document.querySelectorAll('.curr-bal').forEach(e => e.innerText = userData.balance.toLocaleString());
     }
-
-    // Initialize balance on load
-    updateBal();
 </script>
-
 </body>
 </html>
